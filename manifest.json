@@ -1,0 +1,12 @@
+{
+  "name": "Quick Javascript Switcher",
+  "version": "1.0",
+	"author": "Maxime Le Breton [fr]",
+	"description": "Quick way to enable/disable Javascript",
+	"permissions": [ "experimental", "contentSettings", "tabs" ],
+  "incognito": "split",
+	"browser_action": {
+    "default_icon": "icon.png"
+  },
+	"background_page": "background.html"
+}

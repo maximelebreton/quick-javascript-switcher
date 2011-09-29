@@ -1,0 +1,59 @@
+<script>
+// Disable Gear icon by Yusuke Kamiyamane
+
+var incognito;
+var url;
+var setting;
+var newSetting;
+
+function updateIcon(setting) {
+    chrome.browserAction.setIcon({path:"icon-" + setting + ".png"});
+}
+
+function init() {
+  chrome.tabs.getSelected(undefined, function(tab) {
+    incognito = tab.incognito;
+    url = tab.url;
+		chrome.experimental.contentSettings.javascript.get({
+			'primaryUrl': url,
+			'incognito': incognito
+		},
+		function(details) {
+			updateIcon(details.setting);
+		});
+  });
+}
+
+function settingChanged() {
+	var pattern = /^file:/.test(url) ? url : url.replace(/\/[^\/]*?$/, '/*');
+	chrome.experimental.contentSettings.javascript.get({
+		'primaryUrl': url,
+		'incognito': incognito
+	},
+	function(details) {
+		setting = details.setting;
+		if (setting) {
+			if (setting == 'allow') {
+				newSetting = 'block';
+			}
+			if (setting == 'block') {
+				newSetting = 'allow';
+			}
+			chrome.experimental.contentSettings.javascript.set({
+				'primaryPattern': pattern,
+				'setting': newSetting,
+				'scope': (incognito ? 'incognito_session_only' : 'regular')
+			});
+			updateIcon(newSetting);
+		}
+		else {
+			console.log("error, the setting is  "+setting);
+		}
+	});
+}
+
+init();
+
+chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo) { init(); });
+chrome.browserAction.onClicked.addListener(settingChanged);
+</script>
