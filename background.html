@@ -1,74 +1,119 @@
 <script>
-// Disable Gear icon by Yusuke Kamiyamane
+/*
+ * Quick Javascript Switcher Chrome Extension v1.0
+ * http://github.com/maximelebreton/quick-javascript-switcher/
+ *
+ * GPL License. by Maxime Le Breton [www.maximelebreton.com]
+ * Gear icon by Yusuke Kamiyamane
+ */
 
-var incognito;
-var url;
-var setting;
-var forbiddenOrigin = /(chrome\:\/\/)/g;
-var matchForbiddenOrigin;
-var extractHostName = new RegExp('^(?:f|ht)tp(?:s)?\://([^/]+)', 'im');
-
-function updateIcon(setting) {
-    chrome.browserAction.setIcon({path:"icon-" + setting + ".png"});
-}
-
-function getSettings() {
-  chrome.tabs.getSelected(undefined, function(tab) {
-    incognito = tab.incognito;
-    url = tab.url;
-		
-		chrome.experimental.contentSettings.javascript.get({
-			'primaryUrl': url,
-			'incognito': incognito
-		},
-		function(details) {
-			matchForbiddenOrigin = url.match(forbiddenOrigin,'');
-			matchForbiddenOrigin ? updateIcon("inactive") : updateIcon(details.setting);
+if(chrome.experimental.contentSettings instanceof Object) {
+	
+	var extractHostname = new RegExp('^(?:f|ht)tp(?:s)?\://([^/]+)', 'im'),
+			forbiddenOrigin = /(chrome\:\/\/)/g,
+			incognito,
+			url,
+			setting,
+			tabId,
+			matchForbiddenOrigin;
+	
+	function updateIcon(setting) {
+			chrome.browserAction.setIcon({path:"icon-" + setting + ".png"});
+	}
+	
+	function getSettings() {
+		chrome.tabs.getSelected(undefined, function(tab) {
+			incognito = tab.incognito;
+			url = tab.url;
+			tabId = tab.id;
+			console.info("Current tab settings : "+url);
+			chrome.experimental.contentSettings.javascript.get({
+				'primaryUrl': url,
+				'incognito': incognito
+			},
+			function(details) {
+				matchForbiddenOrigin = url.match(forbiddenOrigin,'');
+				matchForbiddenOrigin ? updateIcon("inactive") : updateIcon(details.setting);
+			});
 		});
-  });
-}
-
-function settingChanged() {
-	if (!matchForbiddenOrigin) {
-		var pattern = /^file:/.test(url) ? url : url.match(extractHostName)[0]+'/*';		
-		// old method : url.replace(/\/[^\/]*?$/, '/*')
-		
-		chrome.experimental.contentSettings.javascript.get({
-			'primaryUrl': url,
-			'incognito': incognito
-		},
-		function(details) {
-			setting = details.setting;
+	}
+	
+	function settingChanged() {
+		if (!matchForbiddenOrigin) {
+			var pattern = /^file:/.test(url) ? url : url.match(extractHostname)[0]+'/*';		
+			// old method : url.replace(/\/[^\/]*?$/, '/*')
 			
-			if (setting) {
-				var newSetting = (setting == 'allow' ? 'block' : 'allow'); 
-				
-				chrome.experimental.contentSettings.javascript.set({
-					'primaryPattern': pattern,
-					'setting': newSetting,
-					'scope': (incognito ? 'incognito_session_only' : 'regular')
-				});
-				
-				updateIcon(newSetting);
-				console.info("javascript is now "+newSetting+"ed");
+			chrome.experimental.contentSettings.javascript.get({
+				'primaryUrl': url,
+				'incognito': incognito
+			},
+			function(details) {
+				setting = details.setting;
+				if (setting) {
+					var newSetting = (setting == 'allow' ? 'block' : 'allow'); 
+					chrome.experimental.contentSettings.javascript.set({
+						'primaryPattern': pattern,
+						'setting': newSetting,
+						'scope': (incognito ? 'incognito_session_only' : 'regular')
+					});
+					updateIcon(newSetting);
+					console.info("javascript is now "+newSetting+"ed on "+pattern);
+				}
+				else {
+					console.error("error, the setting is "+setting);
+				}
+			});
+		}
+		else {
+			
+			if(chrome.experimental.infobars instanceof Object) {
+				chrome.experimental.infobars.show({"tabId": tabId, "path": "infobar.html"});
 			}
 			else {
-				console.error("error, the setting is "+setting);
+				console.error("You can't disable javascript on "+url);
 			}
-		});
+			
+		}
 	}
-	else {
-		console.error("You can't disable javascript on "+url);
-	}
+	
+	chrome.tabs.onUpdated.addListener(function(tabId, props, tab) {
+		// Prevent multiple calls
+		if (props.status == "loading" && tab.selected) {
+			//console.info("onUpdated");
+			getSettings();
+		}
+	});
+	
+	chrome.tabs.onSelectionChanged.addListener(function(tabId, props) {
+		//console.info("onSelectionChanged");
+		getSettings();
+	});
+	
+	chrome.tabs.getSelected(null, function(tab) {
+		//console.info("getSelected");
+		getSettings();
+	});
+	
+	chrome.browserAction.onClicked.addListener(settingChanged);
+	
+	chrome.contextMenus.create({
+		"title" : "Open Javascript panel",
+		"type" : "normal",
+		"contexts" : ["all"],
+		"onclick" : openJsPanel()
+	});
+
+}
+else {
+	
+	chrome.browserAction.onClicked.addListener(openJsPanel);
+	
 }
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-	// Prevent multiple calls
-	if (changeInfo.status == "loading" && tab.selected) {
-		getSettings();
-	}
-});
+function openJsPanel() {
+	return function(info, tab) {
+		chrome.tabs.create({"url":"chrome://settings/content#javascript", "selected":true});
+	};
+};
 
-chrome.tabs.onSelectionChanged.addListener(getSettings);
-chrome.browserAction.onClicked.addListener(settingChanged);
 </script>
