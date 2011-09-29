@@ -5,6 +5,7 @@
 	"description": "Quick way to enable/disable Javascript",
 	"permissions": [ "experimental", "contentSettings", "tabs" ],
   "incognito": "split",
+	"icons": { "128": "icon-128.png", "48": "icon-48.png" },
 	"browser_action": {
     "default_icon": "icon.png"
   },
