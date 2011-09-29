@@ -3,7 +3,7 @@
   "version": "1.0",
 	"author": "Maxime Le Breton [fr]",
 	"description": "Quick way to enable/disable Javascript",
-	"permissions": [ "experimental", "contentSettings", "tabs" ],
+	"permissions": ["tabs", "experimental", "contentSettings"],
   "incognito": "split",
 	"icons": { "128": "icon-128.png", "48": "icon-48.png" },
 	"browser_action": {

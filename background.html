@@ -4,56 +4,71 @@
 var incognito;
 var url;
 var setting;
-var newSetting;
+var forbiddenOrigin = /(chrome\:\/\/)/g;
+var matchForbiddenOrigin;
+var extractHostName = new RegExp('^(?:f|ht)tp(?:s)?\://([^/]+)', 'im');
 
 function updateIcon(setting) {
     chrome.browserAction.setIcon({path:"icon-" + setting + ".png"});
 }
 
-function init() {
+function getSettings() {
   chrome.tabs.getSelected(undefined, function(tab) {
     incognito = tab.incognito;
     url = tab.url;
+		
 		chrome.experimental.contentSettings.javascript.get({
 			'primaryUrl': url,
 			'incognito': incognito
 		},
 		function(details) {
-			updateIcon(details.setting);
+			matchForbiddenOrigin = url.match(forbiddenOrigin,'');
+			matchForbiddenOrigin ? updateIcon("inactive") : updateIcon(details.setting);
 		});
   });
 }
 
 function settingChanged() {
-	var pattern = /^file:/.test(url) ? url : url.replace(/\/[^\/]*?$/, '/*');
-	chrome.experimental.contentSettings.javascript.get({
-		'primaryUrl': url,
-		'incognito': incognito
-	},
-	function(details) {
-		setting = details.setting;
-		if (setting) {
-			if (setting == 'allow') {
-				newSetting = 'block';
+	if (!matchForbiddenOrigin) {
+		var pattern = /^file:/.test(url) ? url : url.match(extractHostName)[0]+'/*';		
+		// old method : url.replace(/\/[^\/]*?$/, '/*')
+		
+		chrome.experimental.contentSettings.javascript.get({
+			'primaryUrl': url,
+			'incognito': incognito
+		},
+		function(details) {
+			setting = details.setting;
+			
+			if (setting) {
+				var newSetting = (setting == 'allow' ? 'block' : 'allow'); 
+				
+				chrome.experimental.contentSettings.javascript.set({
+					'primaryPattern': pattern,
+					'setting': newSetting,
+					'scope': (incognito ? 'incognito_session_only' : 'regular')
+				});
+				
+				updateIcon(newSetting);
+				console.info("javascript is now "+newSetting+"ed");
 			}
-			if (setting == 'block') {
-				newSetting = 'allow';
+			else {
+				console.error("error, the setting is "+setting);
 			}
-			chrome.experimental.contentSettings.javascript.set({
-				'primaryPattern': pattern,
-				'setting': newSetting,
-				'scope': (incognito ? 'incognito_session_only' : 'regular')
-			});
-			updateIcon(newSetting);
-		}
-		else {
-			console.log("error, the setting is  "+setting);
-		}
-	});
+		});
+	}
+	else {
+		console.error("You can't disable javascript on "+url);
+	}
 }
 
-init();
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+	// Prevent multiple calls
+	if (changeInfo.status == "loading" && tab.selected) {
+		getSettings();
+	}
+});
 
-chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo) { init(); });
+chrome.tabs.onSelectionChanged.addListener(getSettings);
 chrome.browserAction.onClicked.addListener(settingChanged);
 </script>
