@@ -2,7 +2,7 @@
 
 Quick Javascript Switcher is based on a Chrome Experimental API (experimental.contentSettings).
 This is why i can't publish it on the chrome web store.
-But it's very simple to install it.
+But it's very simple to install.
 
 ## How to install
 
