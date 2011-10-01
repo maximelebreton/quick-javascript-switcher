@@ -1,13 +1,27 @@
-{
-  "name": "Quick Javascript Switcher",
-  "version": "1.0",
-	"author": "Maxime Le Breton [fr]",
-	"description": "Quick way to enable/disable Javascript",
-	"permissions": ["tabs", "experimental", "contentSettings", "contextMenus"],
-  "incognito": "split",
-	"icons": { "128": "icon-128.png", "48": "icon-48.png", "16": "icon.png" },
-	"browser_action": {
-    "default_icon": "icon.png"
-  },
-	"background_page": "background.html"
+{	"name"						:	"Quick Javascript Switcher"
+,	"homepage_url"		: "https://github.com/maximelebreton/quick-javascript-switcher"
+,	"update_url"			: "https://raw.github.com/maximelebreton/quick-javascript-switcher/master/updates.xml"
+, "version"					: "1.0.0"
+,	"description"			: "Quick way to enable/disable Javascript"
+,	"author"					: "Maxime Le Breton [fr]"
+
+,	"icons"						: 
+		{ "16"	: "icon.png"
+		, "48"	: "icon-48.png"
+		, "128"	: "icon-128.png"
+		}
+
+,	"permissions"			:	
+		[ "tabs"
+		, "experimental"
+		, "contentSettings"
+		, "contextMenus"
+		]
+
+,	"browser_action"	: 
+		{ "default_icon"	: "icon.png"
+  	}
+
+, "incognito"				: "split"
+,	"background_page"	: "background.html"
 }
