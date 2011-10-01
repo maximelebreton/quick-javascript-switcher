@@ -1,4 +1,4 @@
-# ![](/maximelebreton/quick-javascript-switcher/blob/9553b416f5f4d00e5373ed6e5a7e163b3a5d51e8/icon-48.png?raw=true "Quick Javascript Switcher") Quick Javascript Switcher (experimental Chrome extension) 
+# ![](https://github.com/maximelebreton/quick-javascript-switcher/raw/master/icon-48.png "Quick Javascript Switcher") Quick Javascript Switcher (experimental Chrome extension) 
 
 Quick Javascript Switcher is based on a Chrome Experimental API (experimental.contentSettings).  
 This is why i currently can't publish it on the chrome web store.  
