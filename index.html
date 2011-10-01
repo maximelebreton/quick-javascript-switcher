@@ -8,20 +8,20 @@
   <style type="text/css">
     body {
       margin-top: 1.0em;
-      background-color: #5ce976;
+      background-color: #fff;
       font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #000000;
+      color: #393939;
     }
     #container {
       margin: 0 auto;
       width: 700px;
     }
-    h1 { font-size: 3.8em; color: #a31689; margin-bottom: 3px; }
+    h1 { font-size: 3.8em; color: #393939; margin-bottom: 3px; }
     h1 .small { font-size: 0.4em; }
     h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #a31689; }
-    h3 { text-align: center; color: #a31689; }
-    a { color: #a31689; }
+    h2 { font-size: 1.5em; color: #393939; }
+    h3 { text-align: center; color: #393939; }
+    a { color: #393939; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
     pre { background: #000; color: #fff; padding: 15px;}
@@ -49,11 +49,19 @@
       A Google Chrome Extension to enable / disable javascript 'on the fly' (based on the experimental chromeSettings API)
     </div>
 
-    <h2>Install</h2>
-<p>    
-   <ol>
+<h1>
+<img src="https://github.com/maximelebreton/quick-javascript-switcher/raw/master/icon-48.png" alt="" title="Quick Javascript Switcher">
+ Quick Javascript Switcher (experimental Chrome extension)</h1>
+
+<p>Quick Javascript Switcher is based on a Chrome Experimental API (experimental.contentSettings).<br>
+This is why i currently can't publish it on the chrome web store.<br>
+But it's very simple to install !</p>
+
+<h2>How to install</h2>
+
+<ol>
 <li>
-<p>First, you need to enable the <a href="http://code.google.com/chrome/extensions/experimental.html">Experimental Extension API</a> on your browser.  </p>
+<p>First, you need to <strong>enable the <a href="http://code.google.com/chrome/extensions/experimental.html">Experimental Extension API</a></strong> on your browser, and <strong>reboot Chrome</strong>.  </p>
 
 <p>You can do this in either of <strong>two ways</strong>:</p>
 
@@ -63,10 +71,13 @@
 </li>
 </ul>
 </li>
-<li><p><a href="https://github.com/maximelebreton/quick-javascript-switcher/zipball/master">Download the extension</a> and extract the main folder where you want</p></li>
-<li><p>Now go to the Extensions page (<a>chrome://extensions</a>), open the Developer mode, and click on "Load unpacked extension".
-Find the extension folder, and that's all !</p></li>
-</ol></p>
+<li><p><a href="https://github.com/downloads/maximelebreton/quick-javascript-switcher/quick-javascript-switcher.crx">Download the .crx extension</a> and just press <em>continue</em>.</p></li>
+</ol><p>That's all !</p>
+
+<h2>Install as unpacked extension</h2>
+
+<p>Enable <a href="http://code.google.com/chrome/extensions/experimental.html">Experimental Extension API</a>, <a href="https://github.com/maximelebreton/quick-javascript-switcher/zipball/master">download the .zip extension</a>, go to the Extensions page (<a>chrome://extensions</a>), open the Developer mode, and click on "Load unpacked extension".
+Find the extension folder, and press <em>ok</em>.</p>
 <h2>License</h2>
 <p>GPL</p>
 <h2>Authors</h2>
