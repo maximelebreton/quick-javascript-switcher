@@ -1,13 +1,16 @@
 <script>
 /*
- * Quick Javascript Switcher Chrome Extension v1.0
+ * Quick Javascript Switcher Chrome Extension v1.0.1
  * http://github.com/maximelebreton/quick-javascript-switcher/
  *
  * GPL License. by Maxime Le Breton [www.maximelebreton.com]
  * Gear icon by Yusuke Kamiyamane
  */
 
-if(chrome.experimental.contentSettings instanceof Object) {
+var chromeContentSettings = chrome.contentSettings instanceof Object ? chrome.contentSettings : chrome.experimental.contentSettings;
+var chromeInfobars = chrome.infobars instanceof Object ? chrome.infobars : chrome.experimental.infobars;
+
+if(chromeContentSettings instanceof Object) {
 	
 	var extractHostname = new RegExp('^(?:f|ht)tp(?:s)?\://([^/]+)', 'im'),
 			forbiddenOrigin = /(chrome\:\/\/)/g,
@@ -27,7 +30,7 @@ if(chrome.experimental.contentSettings instanceof Object) {
 			url = tab.url;
 			tabId = tab.id;
 			console.info("Current tab settings : "+url);
-			chrome.experimental.contentSettings.javascript.get({
+			chromeContentSettings.javascript.get({
 				'primaryUrl': url,
 				'incognito': incognito
 			},
@@ -38,12 +41,12 @@ if(chrome.experimental.contentSettings instanceof Object) {
 		});
 	}
 	
-	function settingChanged() {
+	function changeSettings() {
 		if (!matchForbiddenOrigin) {
 			var pattern = /^file:/.test(url) ? url : url.match(extractHostname)[0]+'/*';		
 			// old method : url.replace(/\/[^\/]*?$/, '/*')
 			
-			chrome.experimental.contentSettings.javascript.get({
+			chromeContentSettings.javascript.get({
 				'primaryUrl': url,
 				'incognito': incognito
 			},
@@ -51,7 +54,7 @@ if(chrome.experimental.contentSettings instanceof Object) {
 				setting = details.setting;
 				if (setting) {
 					var newSetting = (setting == 'allow' ? 'block' : 'allow'); 
-					chrome.experimental.contentSettings.javascript.set({
+					chromeContentSettings.javascript.set({
 						'primaryPattern': pattern,
 						'setting': newSetting,
 						'scope': (incognito ? 'incognito_session_only' : 'regular')
@@ -66,8 +69,8 @@ if(chrome.experimental.contentSettings instanceof Object) {
 		}
 		else {
 			
-			if(chrome.experimental.infobars instanceof Object) {
-				chrome.experimental.infobars.show({"tabId": tabId, "path": "infobar.html"});
+			if(chromeInfobars instanceof Object) {
+				chromeInfobars.show({"tabId": tabId, "path": "infobar.html"});
 			}
 			else {
 				console.error("You can't disable javascript on "+url);
@@ -94,15 +97,8 @@ if(chrome.experimental.contentSettings instanceof Object) {
 		getSettings();
 	});
 	
-	chrome.browserAction.onClicked.addListener(settingChanged);
-	
-	chrome.contextMenus.create({
-		"title" : "Open Javascript panel",
-		"type" : "normal",
-		"contexts" : ["all"],
-		"onclick" : openJsPanel()
-	});
-
+	chrome.browserAction.onClicked.addListener(changeSettings);
+		
 }
 else {
 	
@@ -110,10 +106,27 @@ else {
 	
 }
 
-function openJsPanel() {
-	return function(info, tab) {
-		chrome.tabs.create({"url":"chrome://settings/content#javascript", "selected":true});
-	};
-};
+if (!localStorage.prefs) {
+  localStorage.prefs = JSON.stringify({ "show_contextMenu": true });
+}
+
+var prefs = JSON.parse(localStorage.prefs);
+
+if (prefs.show_contextMenu) {
+	
+	chrome.contextMenus.create({
+		"title" : "Open Javascript panel",
+		"type" : "normal",
+		"contexts" : ["all"],
+		"onclick" : openJsPanel()
+	});
+	
+	function openJsPanel() {
+		return function(info, tab) {
+			chrome.tabs.create({"url":"chrome://settings/content#javascript", "selected":true});
+		}
+	}
+	
+}
 
 </script>

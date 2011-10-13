@@ -1,7 +1,7 @@
 {	"name"						:	"Quick Javascript Switcher"
 ,	"homepage_url"		: "https://github.com/maximelebreton/quick-javascript-switcher"
 ,	"update_url"			: "https://raw.github.com/maximelebreton/quick-javascript-switcher/master/updates.xml"
-, "version"					: "1.0.0"
+, "version"					: "1.0.1"
 ,	"description"			: "Quick way to enable/disable Javascript"
 ,	"author"					: "Maxime Le Breton [fr]"
 
@@ -24,4 +24,5 @@
 
 , "incognito"				: "split"
 ,	"background_page"	: "background.html"
+, "options_page": "options.html"
 }

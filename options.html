@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Options - Quick Javascript Switcher</title>
+<script>
+
+function save() {
+  var prefs = JSON.parse(localStorage.prefs);
+  prefs.show_contextMenu = document.getElementById("contextMenu").checked;
+  localStorage.prefs = JSON.stringify(prefs);	
+}
+
+// Make sure the checkbox checked state gets properly initialized from the
+// saved preference.
+window.onload = function() {
+  var prefs = JSON.parse(localStorage.prefs);
+  document.getElementById("contextMenu").checked = prefs.show_contextMenu;
+}
+
+</script>
+</head>
+<body style="text-align:center;">
+
+  <h2>Options for Quick Javascript Switcher</h2>
+  
+  <p><label for="contextMenu">Show the Javascript Panel shortcut in context menu: <input id="contextMenu" type="checkbox" onclick="save()"></label><br />
+  <small>(Changes will appear after rebooting Chrome or refreshing the extension)</small></p>
+  
+</body>
+</html>
