@@ -7,18 +7,19 @@
  * Gear icon by Yusuke Kamiyamane
  */
 
-var chromeContentSettings = chrome.contentSettings instanceof Object ? chrome.contentSettings : chrome.experimental.contentSettings;
-var chromeInfobars = chrome.infobars instanceof Object ? chrome.infobars : chrome.experimental.infobars;
+/* If chrome contentSettings not supported, Fallback (Link to Js Panel) */
+var chromeContentSettings = chrome.contentSettings instanceof Object ? chrome.contentSettings : false;
+var chromeInfobars = chrome.infobars instanceof Object ? chrome.infobars : false;
 
 if(chromeContentSettings instanceof Object) {
 	
 	var extractHostname = new RegExp('^(?:f|ht)tp(?:s)?\://([^/]+)', 'im'),
-			forbiddenOrigin = /(chrome\:\/\/)/g,
-			incognito,
-			url,
-			setting,
-			tabId,
-			matchForbiddenOrigin;
+		forbiddenOrigin = /(chrome\:\/\/)/g,
+		incognito,
+		url,
+		setting,
+		tabId,
+		matchForbiddenOrigin;
 	
 	function updateIcon(setting) {
 			chrome.browserAction.setIcon({path:"icon-" + setting + ".png"});
@@ -37,6 +38,7 @@ if(chromeContentSettings instanceof Object) {
 			function(details) {
 				matchForbiddenOrigin = url.match(forbiddenOrigin,'');
 				matchForbiddenOrigin ? updateIcon("inactive") : updateIcon(details.setting);
+				
 			});
 		});
 	}
