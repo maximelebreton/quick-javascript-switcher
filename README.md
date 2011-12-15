@@ -1,8 +1,10 @@
 # ![](https://github.com/maximelebreton/quick-javascript-switcher/raw/master/icon-48.png "Quick Javascript Switcher") Quick Javascript Switcher (experimental Chrome extension) 
 
-Quick Javascript Switcher is based on a Chrome Experimental API (experimental.contentSettings).  
-This is why i currently can't publish it on the chrome web store.  
-But it's very simple to install !
+Quick Javascript Switcher is a Chrome Extension to enable / disable javascript 'on the fly'.  
+QJS is based on a Chrome Experimental API (experimental.contentSettings), this is why i currently can't publish it on the chrome web store.  
+But it's very simple to install (2 steps) !
+
+[Download Quick Javascript Switcher][crx-extension] (.crx)
 
 ## How to install
 
