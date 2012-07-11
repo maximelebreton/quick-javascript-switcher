@@ -27,14 +27,16 @@ if(chromeContentSettings) {
 	function getSettings() {
 		chrome.tabs.getSelected(undefined, function(tab) {
 			incognito = tab.incognito;
-			url = tab.url;
+			url = tab.url+"*";
 			tabId = tab.id;
+			
 			//console.info("Current tab settings : "+url);
 			chromeContentSettings.javascript.get({
 				'primaryUrl': url,
 				'incognito': incognito
 			},
 			function(details) {
+				//console.info("Current tab settings : "+url);
 				matchForbiddenOrigin = url.match(forbiddenOrigin,'');
 				matchForbiddenOrigin ? updateIcon("inactive") : updateIcon(details.setting);
 				
@@ -44,9 +46,6 @@ if(chromeContentSettings) {
 	
 	function changeSettings() {
 		if (!matchForbiddenOrigin) {
-			var pattern = /^file:/.test(url) ? url : url.match(extractHostname)[0]+'/*';		
-			// old method : url.replace(/\/[^\/]*?$/, '/*')
-			
 			chromeContentSettings.javascript.get({
 				'primaryUrl': url,
 				'incognito': incognito
@@ -54,6 +53,8 @@ if(chromeContentSettings) {
 			function(details) {
 				setting = details.setting;
 				if (setting) {
+					var pattern = /^file:/.test(url) ? url : url.match(extractHostname)[0]+'/*';
+					// old method : url.replace(/\/[^\/]*?$/, '/*')
 					var newSetting = (setting == 'allow' ? 'block' : 'allow'); 
 					chromeContentSettings.javascript.set({
 						'primaryPattern': pattern,

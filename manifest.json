@@ -1,8 +1,9 @@
-{	"name"					:	"Quick Javascript Switcher"
-,	"minimum_chrome_version":	"16.0"
+{	"name"					: "Quick Javascript Switcher"
+, 	"version"				: "1.0.7"
+,	"minimum_chrome_version": "16.0"
+,	"manifest_version"		: 2
 ,	"homepage_url"			: "https://github.com/maximelebreton/quick-javascript-switcher"
 ,	"update_url"			: "https://raw.github.com/maximelebreton/quick-javascript-switcher/master/updates.xml"
-, 	"version"				: "1.0.6"
 ,	"description"			: "Quick way to enable/disable Javascript"
 ,	"author"				: "Maxime Le Breton [fr]"
 
@@ -26,3 +27,4 @@
 ,	"background_page"		: "background.html"
 ,	"options_page"			: "options.html"
 }
+
