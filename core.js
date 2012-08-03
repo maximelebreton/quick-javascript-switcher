@@ -6,9 +6,14 @@
  * Gear icon by Yusuke Kamiyamane
  */
 
+var prefs;
+var contextMenuId = null;
+
 var chromeContentSettings = chrome.contentSettings;
 /* currently (chrome 16), infobars is not implemented (only experimental...) */
 var chromeInfobars = chrome.infobars;
+
+init();
 
 if(chromeContentSettings) {
 	
@@ -27,7 +32,7 @@ if(chromeContentSettings) {
 	function getSettings() {
 		chrome.tabs.getSelected(undefined, function(tab) {
 			incognito = tab.incognito;
-			url = tab.url+"*";
+			url = tab.url;
 			tabId = tab.id;
 			
 			//console.info("Current tab settings : "+url);
@@ -62,6 +67,9 @@ if(chromeContentSettings) {
 						'scope': (incognito ? 'incognito_session_only' : 'regular')
 					});
 					updateIcon(newSetting);
+					if (prefs.autoRefresh) {
+						chrome.tabs.reload(tabId);
+					}
 					//console.info("javascript is now "+newSetting+"ed on "+pattern);
 				}
 				else {
@@ -108,25 +116,49 @@ else {
 	
 }
 
-if (!localStorage.prefs) {
-  localStorage.prefs = JSON.stringify({ "show_contextMenu": true });
+function getLocalStoragePrefs() {
+	
+	if (!localStorage.prefs_QJS) {
+		localStorage.prefs_QJS = JSON.stringify({ "showContextMenu": true, "autoRefresh": true });
+	}
+	
+	prefs = JSON.parse(localStorage.prefs_QJS);
+
 }
 
-var prefs = JSON.parse(localStorage.prefs);
-
-if (prefs.show_contextMenu) {
+function toggleContextMenu() {
 	
-	chrome.contextMenus.create({
-		"title" : "Open Javascript panel",
-		"type" : "normal",
-		"contexts" : ["all"],
-		"onclick" : openJsPanel()
-	});
-	
-	function openJsPanel() {
-		return function(info, tab) {
-			chrome.tabs.create({"url":"chrome://settings/content#javascript", "selected":true});
-		}
+	if (prefs.showContextMenu && !contextMenuId) {
+		
+		contextMenuId = chrome.contextMenus.create({
+			"title" : "Go to Chrome JavaScript settings",
+			"type" : "normal",
+			"contexts" : ["all"],
+			"onclick" : openJsPanel()
+		});
+		
 	}
+
+	if (!prefs.showContextMenu && contextMenuId) {
+		
+		chrome.contextMenus.remove(contextMenuId);
+		contextMenuId = null;
+		
+	}
+	
+}
+
+function openJsPanel() {
+	
+	return function(info, tab) {
+		chrome.tabs.create({"url":"chrome://settings/content#javascript", "selected":true});
+	};
+	
+}
+
+function init() {
+	
+	getLocalStoragePrefs();
+	toggleContextMenu();
 	
 }
