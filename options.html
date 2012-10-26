@@ -10,10 +10,21 @@
 
   <h2>Options for Quick Javascript Switcher</h2>
   
-  <p><label for="contextMenu"><input id="contextMenu" type="checkbox" /> Show the Javascript Panel shortcut in context menu</label><br />
+  <p><label for="contextMenu"><input id="contextMenu" type="checkbox" /> Show JavaScript settings shortcut in context menu</label><br />
   </p>
   
-  <p><label for="autoRefresh" title="Automaticly refresh the tab after enabling/disabling JavaScript"><input id="autoRefresh" type="checkbox" /> Auto-Refresh</label><br /></p>
+  <p><label for="autoRefresh" title="Automaticly refresh the tab after enabling/disabling JavaScript"><input id="autoRefresh" type="checkbox" /> Auto-Refresh</label><br /><br /></p>
+  
+  <h3>JavaScript settings</h3>
+  <p><button id="openJavascriptSettings">Open JavaScript settings</button> <button id="clearJavascriptSettings" title="Clear all rules setted by Quick Javascript Switcher">Clear JavaScript settings set by QJS</button><br /><br /></p>
+
+  <h3>Local Storage rules</h3>
+
+  <p>Every existing rule is saved here and can be reintroduce at will. (Incognito rules aren't saved)</p>
+
+  <p><textarea name="qjs_rules" id="qjs_rules" cols="30" rows="10" style="width:100%;"></textarea></p>
+
+  <p><button id="importRules">Import these rules in JavaScript settings</button> <button id="clearLocalStorageRules">Clear Local Storage rules</button></p>
   
 </body>
 </html>

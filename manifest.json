@@ -1,5 +1,5 @@
 {	"name"					: "Quick Javascript Switcher"
-, 	"version"				: "1.1.0"
+, 	"version"				: "1.2.0"
 ,	"minimum_chrome_version": "16.0"
 ,	"manifest_version"		: 2
 ,	"homepage_url"			: "https://github.com/maximelebreton/quick-javascript-switcher"
@@ -23,7 +23,7 @@
 		{ "default_icon"	: "icon.png"
 		}
 
-,	"incognito"				: "split"
+,	"incognito"				: "spanning"
 ,	"background"			: 
 		{ "page": "background.html"
 		}
