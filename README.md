@@ -19,3 +19,9 @@ Find the extension folder, and press *ok*.
 [chrome-extensions]:chrome://extensions
 [chrome-flags]:chrome://flags
 [experimental-api]:http://code.google.com/chrome/extensions/experimental.html
+
+  <h2>In love with QJS ?</h2>
+
+  <p>Please consider a contribution to support continued development and maintenance.</p>
+  <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6B7C429F8J3K6"><img src="https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif" alt="Donate" /></a></p>
+  <p>Thank you !<br/><small><a href="http://www.maximelebreton.com">mlb</a></small></p>
