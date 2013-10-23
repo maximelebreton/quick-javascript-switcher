@@ -10,7 +10,7 @@ var prefs;
 var contextMenuId = null;
 
 var chromeContentSettings = chrome.contentSettings;
-/* currently (chrome 16), infobars is not implemented (only experimental...) */
+/* currently, infobars is not implemented (only experimental...) */
 var chromeInfobars = chrome.infobars;
 
 
@@ -53,6 +53,14 @@ if(chromeContentSettings) {
 
 	chrome.browserAction.onClicked.addListener(changeSettings);
 
+	
+	chrome.commands.onCommand.addListener(function(command) {
+	  if (command == "toggle-qjs") {
+	    changeSettings();
+	  }
+	});
+
+
 } else {
 	chrome.browserAction.onClicked.addListener(openJsPanel.call());
 }
@@ -75,12 +83,13 @@ function getSettings() {
 		function(details) {
 			//console.info("Current tab settings : "+url);
 			url ? matchForbiddenOrigin = url.match(forbiddenOrigin,'') : matchForbiddenOrigin = true;
-			matchForbiddenOrigin ? updateIcon("inactive") : updateIcon(details.setting);				
+			matchForbiddenOrigin ? updateIcon("inactive") : updateIcon(details.setting);
 		});
 	});
 }
 
 function changeSettings() {
+
 	if (!matchForbiddenOrigin) {
 		chromeContentSettings.javascript.get({
 			'primaryUrl': url,
@@ -98,15 +107,17 @@ function changeSettings() {
 					'primaryPattern': pattern,
 					'setting': newSetting,
 					'scope': (incognito ? 'incognito_session_only' : 'regular')
-				});
-				
-				updateIcon(newSetting);
+				}, function() {
 
-				if (prefs.autoRefresh) {
-					chrome.tabs.reload(tabId);
-				}
+					updateIcon(newSetting);
 
-				setLocalStorageRule(pattern, newSetting);
+					if (prefs.autoRefresh) {
+						chrome.tabs.reload(tabId);
+					}
+
+					setLocalStorageRule(pattern, newSetting);
+
+				});				
 
 				//console.info("javascript is now "+newSetting+"ed on "+pattern);
 			}
@@ -125,6 +136,7 @@ function changeSettings() {
 		}
 		
 	}
+
 }
 
 
@@ -149,6 +161,9 @@ function setLocalStorageRule(pattern, newSetting) {
 		}
 
 		if (!keyExist) {
+
+			// to do : keep only block, only allow or both
+
 			rules.push({
 				'primaryPattern': pattern,
 				'setting': newSetting,
@@ -165,6 +180,8 @@ function setLocalStorageRule(pattern, newSetting) {
 function importRules(localStorageRules) {
 
 	var rules = localStorageRules;
+
+	// todo : delete spaces
 
 	if (rules.length) {
 		for(i = 0; i < rules.length; i++) {
