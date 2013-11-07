@@ -23,5 +23,6 @@ Find the extension folder, and press *ok*.
   <h2>In love with QJS ?</h2>
 
   <p>Please consider a contribution to support continued development and maintenance.</p>
-  <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6B7C429F8J3K6"><img src="https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif" alt="Donate" /></a></p>
+  <p><a href="https://flattr.com/submit/auto?user_id=maximelebreton&url=https%3A%2F%2Fgithub.com%2Fmaximelebreton%2Fquick-javascript-switcher" target="_blank"><img src="https://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0"></a></p>
+  <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6B7C429F8J3K6"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate" /></a></p>
   <p>Thank you !<br/><small><a href="http://www.maximelebreton.com">mlb</a></small></p>
