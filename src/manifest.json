@@ -1,0 +1,41 @@
+{	"name"					: "Quick Javascript Switcher"
+, 	"version"				: "1.4.0"
+,	"minimum_chrome_version": "16.0"
+,	"manifest_version"		: 2
+,	"homepage_url"			: "https://github.com/maximelebreton/quick-javascript-switcher"
+,	"update_url"			: "https://raw.github.com/maximelebreton/quick-javascript-switcher/master/updates.xml"
+,	"description"			: "Quick way to enable/disable Javascript"
+
+,	"icons"					:
+		{ "16"				: "icons/icon.png"
+		, "48"				: "icons/icon-48.png"
+		, "128"				: "icons/icon-128.png"
+		}
+
+,	"permissions"			:
+		[ "tabs"
+		, "contentSettings"
+		, "contextMenus"
+		, "debugger"
+		, "storage"
+		]
+
+,	"browser_action"		:
+		{ "default_icon"	: "icons/icon.png"
+		}
+
+,	"incognito"				: "spanning"
+,	"background"			: 
+		{ "page": "background.html"
+		}
+,	"options_page"			: "options.html"
+
+,	"commands": {
+		"toggle-qjs": {
+			"suggested_key": { "default": "Alt+Shift+Q" },
+			"description": "Toggle JavaScript"
+		}
+  	}
+
+}
+
