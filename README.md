@@ -5,7 +5,7 @@ QJS is based on the contentSettings Chrome API.
 
 ## How to install
 
-[Download the .crx extension][crx-extension] and just press *continue*.
+[Download the .crx extension][crx-extension] and just drop it in Chrome!
 
 That's all !
 
