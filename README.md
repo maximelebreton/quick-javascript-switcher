@@ -14,7 +14,7 @@ That's all !
 [Download the .zip extension][zip-extension], go to the Extensions page ([chrome://extensions][chrome-extensions]), open the Developer mode, and click on "Load unpacked extension".  
 Find the extension folder, and press *ok*.
 
-[crx-extension]:https://github.com/downloads/maximelebreton/quick-javascript-switcher/quick-javascript-switcher.crx
+[crx-extension]:https://raw.githubusercontent.com/maximelebreton/quick-javascript-switcher/master/build.crx
 [zip-extension]:https://github.com/maximelebreton/quick-javascript-switcher/zipball/master
 [chrome-extensions]:chrome://extensions
 [chrome-flags]:chrome://flags
