@@ -7,12 +7,12 @@ document.addEventListener("webkitvisibilitychange", showRules, false);
 
 function save() {
 
-  root.prefs.showContextMenu = getById("contextMenu").checked;
-  root.prefs.autoRefresh = getById("autoRefresh").checked;
-  root.prefs.useSync = getById("useSync").checked;
+  root.cache.options.showContextMenu = getById("contextMenu").checked;
+  root.cache.options.autoRefresh = getById("autoRefresh").checked;
+  root.cache.options.useSync = getById("useSync").checked;
 
   root.chromeStorageMethod.set({
-    "qjs_options": JSON.stringify(root.prefs.qjs_options)
+    "options": JSON.stringify(root.cache.options)
   }, function(data) {
 
     showRules();
@@ -23,8 +23,8 @@ function save() {
 
 function showRules() {
   //chrome.extension.getBackgroundPage().getStorageRules();
-
-  getById("qjs_rules").value = root.prefs.qjs_rules;
+  console.log(root.cache.rules);
+  getById("qjs_rules").value = JSON.stringify(root.cache.rules);
 
 }
 
@@ -34,9 +34,9 @@ window.onload = function() {
   showRules();
 
 
-  getById("contextMenu").checked = root.prefs.qjs_options.showContextMenu;
-  getById("autoRefresh").checked = root.prefs.qjs_options.autoRefresh;
-  getById("useSync").checked = root.prefs.qjs_options.useSync;
+  getById("contextMenu").checked = root.cache.options.showContextMenu;
+  getById("autoRefresh").checked = root.cache.options.autoRefresh;
+  getById("useSync").checked = root.cache.options.useSync;
 
   getById("contextMenu").onclick = function() {
     save();

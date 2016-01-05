@@ -16,7 +16,6 @@
 		[ "tabs"
 		, "contentSettings"
 		, "contextMenus"
-		, "debugger"
 		, "storage"
 		]
 
@@ -32,7 +31,7 @@
 
 ,	"commands": {
 		"toggle-qjs": {
-			"suggested_key": { "default": "Alt+Shift+Q" },
+			"suggested_key": { "default": "Alt+Shift+Q", "mac": "Command+Shift+Q" },
 			"description": "Toggle JavaScript"
 		}
   	}
