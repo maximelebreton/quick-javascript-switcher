@@ -1,5 +1,5 @@
 {	"name"					: "Quick Javascript Switcher"
-, 	"version"				: "1.4.0"
+, 	"version"				: "1.4.1"
 ,	"minimum_chrome_version": "16.0"
 ,	"manifest_version"		: 2
 ,	"homepage_url"			: "https://github.com/maximelebreton/quick-javascript-switcher"

@@ -12,7 +12,7 @@ var chromeContentSettings = chrome.contentSettings;
 
 var chromeStorageMethod;
 
-var isIncognitoWindows = false;
+var isIncognitoWindows;
 
 var cache = {
 
@@ -74,9 +74,9 @@ if (chromeContentSettings) {
 
     for (var index in callback) {
       if (callback.hasOwnProperty(index)) {
-        console.log(callback[index]);
+        //console.log(callback[index]);
         cache[index] = JSON.parse(callback[index].newValue);
-        console.log(cache);
+        //console.log(cache);
       }
     }
 
@@ -105,10 +105,11 @@ function getSettings() {
 
     if (tab) {
 
-      console.log(tab);
+      //console.log(tab);
       incognito = tab.incognito;
       url = tab.url;
       tabId = tab.id;
+      tabIndex = tab.index;
 
       //console.info("Current tab settings : "+url);
       chromeContentSettings.javascript.get({
@@ -132,11 +133,9 @@ function changeSettings() {
         'incognito': incognito
       },
       function (details) {
-
         setting = details.setting;
         if (setting) {
 
-          console.log(incognito);
           var pattern = /^file:/.test(url) ? url : url.match(extractHostname)[0] + '/*';
 
           // old method : url.replace(/\/[^\/]*?$/, '/*')
@@ -148,9 +147,25 @@ function changeSettings() {
           }, function () {
 
             updateIcon(newSetting);
-
-            if (cache.options.autoRefresh) {
-              chrome.tabs.reload(tabId);
+            
+            /**
+             * hack to fix chrome issue in incognito mode:
+             * https://code.google.com/p/chromium/issues/detail?id=494501
+             */
+            if (incognito) {
+              
+              chrome.tabs.create({
+                'url': url,
+                'index': tabIndex
+              }, function() {
+                  chrome.tabs.remove(tabId);
+              });
+              
+            } else {
+              
+              if (cache.options.autoRefresh) {
+                chrome.tabs.reload(tabId, {bypassCache: false});
+              }
             }
 
             setStorageRule(pattern, newSetting);
@@ -308,7 +323,7 @@ function getStoragePrefs(callback) {
     }
 
     if (data['rules']) {
-      console.log(data['rules']);
+      //console.log(data['rules']);
 
       cache.rules = JSON.parse(data['rules']);
     } else {
@@ -390,29 +405,23 @@ function openJsPanel() {
 
 function initIncognitoClear() {
 
-  chrome.windows.onCreated.addListener(function (window) {
-
-    if (window.incognito) {
-      isIncognitoWindows = true;
-      console.log('window incognito')
-    }
-  });
-
   chrome.windows.onRemoved.addListener(function (windowId) {
 
     chrome.windows.getAll(function (windows) {
 
       windows.forEach(function (window) {
 
+        console.log(window.incognito);
         if (window.incognito) {
           isIncognitoWindows = true;
         }
       });
 
-      if (isIncognitoWindows) {
+      if (isIncognitoWindows !== true) {
         console.log("clear incognito");
         clearRules("contentSettings", true);
-        isIncognitoWindows = false;
+      } else {
+        // still remaining incognito windows
       }
 
     });
