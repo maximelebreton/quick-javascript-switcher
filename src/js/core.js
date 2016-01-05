@@ -135,7 +135,7 @@ function changeSettings() {
 
         setting = details.setting;
         if (setting) {
-          
+
           console.log(incognito);
           var pattern = /^file:/.test(url) ? url : url.match(extractHostname)[0] + '/*';
 
@@ -164,7 +164,7 @@ function changeSettings() {
       });
   } else {
 
-      //console.error("You can't disable javascript on "+url);
+    //console.error("You can't disable javascript on "+url);
 
   }
 
@@ -249,7 +249,7 @@ function clearRules(arg, incognito) {
     cache.rules = [];
     //window.localStorage.setItem('qjs_rules',[]);
     chromeStorageMethod.set({
-      "rules": []
+      "rules": JSON.stringify([])
     }, function () {
       console.log("clear ok");
     });
@@ -263,8 +263,9 @@ function checkVersion(callback) {
    */
   chrome.storage.local.get(['version'], function (data) {
 
-    var oldValue = data['version'] || undefined;
+    var oldValue = data['version'] || window.localStorage.qjs_version || undefined;
     var newValue = getVersion();
+
     if (oldValue !== newValue) {
       if (typeof oldValue == 'undefined') {
         onInstall();
@@ -273,7 +274,7 @@ function checkVersion(callback) {
       }
 
       chrome.storage.local.set({
-        "qjs_version": newValue
+        "version": newValue
       }, function () {
         console.log("version ok");
       });
@@ -284,6 +285,7 @@ function checkVersion(callback) {
     }
 
   });
+
 }
 
 function getStoragePrefs(callback) {
