@@ -1,4 +1,4 @@
-# ![](https://github.com/maximelebreton/quick-javascript-switcher/raw/master/icon-48.png "Quick Javascript Switcher") Quick Javascript Switcher (Chrome extension) 
+# ![](https://github.com/maximelebreton/quick-javascript-switcher/raw/master/src/icons/icon-48.png "Quick Javascript Switcher") Quick Javascript Switcher (Chrome extension) 
 
 Quick Javascript Switcher is a Chrome Extension to enable / disable javascript 'on the fly'.  
 QJS is based on the contentSettings Chrome API.
