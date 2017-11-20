@@ -397,7 +397,7 @@ function refresh() {
 function openJsPanel() {
   return function (info, tab) {
     chrome.tabs.create({
-      "url": "chrome://chrome/settings/contentExceptions#javascript",
+      "url": "chrome://settings/content/javascript",
       "selected": true
     });
   };
