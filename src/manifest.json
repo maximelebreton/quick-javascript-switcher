@@ -1,9 +1,9 @@
-{	"name"					: "Quick Javascript Switcher"
-, 	"version"				: "1.4.1"
+{	"name"					: "Quick Javascript Switcher 2"
+,   "short_name"            : "qjs2"
+, 	"version"				: "1.5.1"
 ,	"minimum_chrome_version": "16.0"
 ,	"manifest_version"		: 2
-,	"homepage_url"			: "https://github.com/maximelebreton/quick-javascript-switcher"
-,	"update_url"			: "https://raw.github.com/maximelebreton/quick-javascript-switcher/master/updates.xml"
+,	"homepage_url"			: "https://github.com/mtimkovich/quick-javascript-switcher2"
 ,	"description"			: "Quick way to enable/disable Javascript"
 
 ,	"icons"					:
