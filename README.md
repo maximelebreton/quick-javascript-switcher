@@ -8,7 +8,7 @@ in QJS as well as add some minor features.
 
 ## How to install
 
-The easiest way is to download it from the [Chrome Web Store][webstore].
+The easiest way is to install is from the [Chrome Web Store][webstore].
 
 Alternatively, you can [download the .zip extension][zip-extension], go to the [Extensions page][chrome-extensions], open the Developer mode, and click on "Load unpacked extension".  
 Find the extension folder, and press OK.
