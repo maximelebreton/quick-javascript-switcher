@@ -89,10 +89,29 @@ if (chromeContentSettings) {
   chrome.browserAction.onClicked.addListener(openJsPanel.call());
 }
 
-function updateIcon(setting) {
+function updateIconAndMenu(setting) {
   chrome.browserAction.setIcon({
     path: "icons/icon-" + setting + ".png"
   });
+  
+  if (cache.options.showContextMenu && contextMenuId) {
+    var text = '';
+    var visible = true;
+    if (setting === 'allow') {
+      text = 'Block';
+    } else if (setting === 'block') {
+      text = 'Allow';
+    }
+
+    if (setting === 'inactive') {
+      visible = false;
+    }
+
+    chrome.contextMenus.update(contextMenuId, {
+      "title": text + ' JavaScript',
+      "visible": visible,
+    });
+  }
 }
 
 function getSettings() {
@@ -119,7 +138,7 @@ function getSettings() {
         function (details) {
           //console.info("Current tab settings : "+url);
           url ? matchForbiddenOrigin = url.match(forbiddenOrigin, '') : matchForbiddenOrigin = true;
-          matchForbiddenOrigin ? updateIcon("inactive") : updateIcon(details.setting);
+          matchForbiddenOrigin ? updateIconAndMenu("inactive") : updateIconAndMenu(details.setting);
         });
     };
   });
@@ -146,7 +165,7 @@ function changeSettings() {
             'scope': (incognito ? 'incognito_session_only' : 'regular')
           }, function () {
 
-            updateIcon(newSetting);
+            updateIconAndMenu(newSetting);
             
             /**
              * hack to fix chrome issue in incognito mode:
@@ -373,10 +392,10 @@ function toggleContextMenu() {
   if (cache.options.showContextMenu && !contextMenuId) {
 
     contextMenuId = chrome.contextMenus.create({
-      "title": "Go to JavaScript settings",
+      "title": "Toggle JavaScript",
       "type": "normal",
-      "contexts": ["all"],
-      "onclick": openJsPanel()
+      "contexts": ["page"],
+      "onclick": changeSettings
     });
 
   }
@@ -435,6 +454,13 @@ function init() {
 
     checkVersion();
     toggleContextMenu();
+	
+	var buttonContextMenuId = chrome.contextMenus.create({
+      "title": "Go to JavaScript settings",
+      "type": "normal",
+      "contexts": ["browser_action"],
+      "onclick": openJsPanel()
+    });
 
   });
 
