@@ -8,10 +8,12 @@ in QJS as well as add some minor features.
 
 ## How to install
 
-[Download the .zip extension][zip-extension], go to the [Extensions page][chrome-extensions], open the Developer mode, and click on "Load unpacked extension".  
-Find the extension folder, and press *ok*.
+The easiest way is to download it from the [Chrome Web Store][webstore].
 
-## In love with QJS?
+Alternatively, you can [download the .zip extension][zip-extension], go to the [Extensions page][chrome-extensions], open the Developer mode, and click on "Load unpacked extension".  
+Find the extension folder, and press OK.
+
+## In love with QJS2?
 
 Please consider a contribution to support continued development and maintenance.
 
@@ -23,6 +25,7 @@ Thank you!
 [mlb][maxime] and [Max Timkovich][mtimkovich]
 
 [zip-extension]:https://github.com/mtimkovich/quick-javascript-switcher/zipball/master
+[webstore]: https://chrome.google.com/webstore/detail/quick-javascript-switcher/ahjfodbngfpdppljbkhcfhcfdagfgcnj
 [chrome-extensions]:chrome://extensions
 [qjs]: https://github.com/maximelebreton/quick-javascript-switcher
 [maxime]: http://www.maximelebreton.com
