@@ -1,11 +1,3 @@
-/*
- * Quick Javascript Switcher Chrome Extension
- * http://github.com/maximelebreton/quick-javascript-switcher/
- *
- * GPL License. by Maxime Le Breton [www.maximelebreton.com]
- * Gear icon by Yusuke Kamiyamane
- */
-
 var contextMenuId = null;
 
 var chromeContentSettings = chrome.contentSettings;

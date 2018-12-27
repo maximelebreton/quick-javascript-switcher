@@ -1,10 +1,10 @@
-{	"name"					: "Quick Javascript Switcher 2"
-,   "short_name"            : "qjs2"
+{	"name"					: "One-Click JavaScript Toggle"
+,   "short_name"            : "ojt"
 , 	"version"				: "1.5.1"
 ,	"minimum_chrome_version": "16.0"
 ,	"manifest_version"		: 2
-,	"homepage_url"			: "https://github.com/mtimkovich/quick-javascript-switcher2"
-,	"description"			: "Quick way to enable/disable Javascript"
+,	"homepage_url"			: "https://github.com/mtimkovich/one-click-javascript-toggle"
+,	"description"			: "Fastest way to enable/disable JavaScript"
 
 ,	"icons"					:
 		{ "16"				: "icons/icon.png"
