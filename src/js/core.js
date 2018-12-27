@@ -75,7 +75,11 @@ if (chromeContentSettings) {
     for (var index in callback) {
       if (callback.hasOwnProperty(index)) {
         //console.log(callback[index]);
-        cache[index] = JSON.parse(callback[index].newValue);
+        if (index === 'version') {
+            cache[index] = callback[index].newValue;
+        } else {
+            cache[index] = JSON.parse(callback[index].newValue);
+        }
         //console.log(cache);
       }
     }
