@@ -1,6 +1,6 @@
 {	"name"					: "One-Click JavaScript Toggle"
 ,   "short_name"            : "ojt"
-, 	"version"				: "1.5.1"
+, 	"version"				: "1.5.2"
 ,	"minimum_chrome_version": "16.0"
 ,	"manifest_version"		: 2
 ,	"homepage_url"			: "https://github.com/mtimkovich/one-click-javascript-toggle"
