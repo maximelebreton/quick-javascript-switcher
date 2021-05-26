@@ -3,6 +3,13 @@
 Quick Javascript Switcher is a Chrome Extension to enable / disable javascript 'on the fly'.  
 QJS is based on the contentSettings Chrome API.
 
+#### Shortcut
+- **Windows** [[Alt+Shift+Q](https://github.com/maximelebreton/quick-javascript-switcher/blob/master/src/manifest.json#L33)]
+- **Mac** [[Command+Shift+Q](https://github.com/maximelebreton/quick-javascript-switcher/blob/master/src/manifest.json#L33)]  
+
+ 
+The **default shortcut can be customized** in [chrome://extensions/shortcuts](chrome://extensions/shortcuts)
+
 ## How to install
 
 [Download the .crx extension][crx-extension] and just drop it in Chrome!
