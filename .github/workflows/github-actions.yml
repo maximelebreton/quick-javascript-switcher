@@ -1,2 +1,33 @@
-- name: Chrome Extension upload & publish
-  uses: Passiverecords/chrome-extension-upload-action@1.4.1
+- name: "tagged-release"
+  on:
+    push:
+      branches:
+        - "2.0"
+
+  jobs:
+    tagged-release:
+      name: "Tagged Release"
+      runs-on: "ubuntu-latest"
+
+      steps:
+        - name: "Build & Zip"
+          run: |
+            npm run build && npm run zip
+
+        - uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            prerelease: false
+            files: |
+              quick-javascript-switcher.zip
+
+
+# - name: Chrome Extension upload & publish
+#   uses: Passiverecords/chrome-extension-upload-action@1.4.1
+#   with:
+#     refresh-token: 'xxxxxxxxxxxxxxxxxxxxxx'
+#     client-id: 'xxxxxxxxxxxxx'
+#     client-secret: 'xxxxxxxxxxxx'
+#     file-name: './extension.zip'
+#     app-id: 'geddoclleiomckbhadiaipdggiiccfje'
+#     publish: false

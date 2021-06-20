@@ -8,8 +8,8 @@ import {
 } from "../background/contentsettings";
 
 export const fetchRules = async () => {
-  return new Promise<void>(async (resolve, reject) => {
-    const rules = await getStorageRules();
+  const rules = await getStorageRules();
+  return new Promise<void>((resolve, reject) => {
     console.log(rules, "FETCHED RULES");
     state.rules = rules;
     resolve();
@@ -79,12 +79,12 @@ export const addRule = async (rule: QJS.ContentSettingRule) => {
 };
 
 export const editRule = (index: number) => {
-  let rule = getRules.value[index];
+  const rule = getRules.value[index];
 
-  const regex = /(.+):\/+([^\/]+)\/(.*)/gm;
+  const regex = /(.+):\/+([^/]+)\/(.*)/gm;
 
   //@ts-ignore
-  let [primaryPattern, scheme, host, path] = regex.exec(rule.primaryPattern);
+  const [primaryPattern, scheme, host, path] = regex.exec(rule.primaryPattern);
 
   state.input.scheme = scheme;
   state.input.host = host;

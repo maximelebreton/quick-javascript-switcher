@@ -1,13 +1,15 @@
 {
   "name": "qjs",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "build-watch": "vue-cli-service build-watch --mode development"
+    "build-watch": "vue-cli-service build-watch --mode development",
+    "zip": "bestzip quick-javascript-switcher.zip .build/*",
+    "deploy": "npm run build && npm run zip && npm run upload"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -30,10 +32,12 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^2.0.0-0",
+    "bestzip": "^2.2.0",
     "copy-webpack-plugin": "^4.6.0",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.0.0",
+    "generate-json-from-js-webpack-plugin": "^0.1.1",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5",

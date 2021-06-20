@@ -11,10 +11,10 @@ export const helpMessage = computed(() => state.helpMessage);
 export const getRules = computed(() => Object.values(state.rules!));
 
 export const filteredRules = computed(() => {
-  let filteredRules = [] as { index: number; rule: QJS.ContentSettingRule }[];
+  const filteredRules = [] as { index: number; rule: QJS.ContentSettingRule }[];
 
   getRules.value.forEach((rule, index) => {
-    let condition = Object.keys(rule).some(function (key) {
+    const condition = Object.keys(rule).some(function (key) {
       return rule[key].includes(state.filterQuery);
     });
 
@@ -39,11 +39,11 @@ export const colorClass = computed(() => {
 });
 
 export const getPrimaryPattern = computed(() => {
-  let scheme =
+  const scheme =
     (state.input.scheme ? `${state.input.scheme}` : "*") + schemeSuffix.value;
-  //let subdomain = state.input.subdomain ? `${state.input.subdomain}` : "*";
-  let host = state.input.host ? `${state.input.host}` : "";
-  let path = "/" + (state.input.path ? `${state.input.path}` : "*");
+  //const subdomain = state.input.subdomain ? `${state.input.subdomain}` : "*";
+  const host = state.input.host ? `${state.input.host}` : "";
+  const path = "/" + (state.input.path ? `${state.input.path}` : "*");
 
   return `${scheme}${host}${path}`;
 });
