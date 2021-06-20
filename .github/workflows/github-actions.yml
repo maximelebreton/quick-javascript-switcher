@@ -19,11 +19,9 @@ jobs:
 
       - uses: cardinalby/webext-buildtools-chrome-crx-action@v2
         with:
-          # zip file made at the packExtensionDir step
           zipFilePath: 'quick-javascript-switcher.zip',
           crxFilePath: 'quick-javascript-switcher.crx'
           privateKey: ${{ secrets.CHROME_CRX_PRIVATE_KEY }},
-          # The following is optional if you need update.xml file
           updateXmlPath: 'update.xml',      
           updateXmlCodebaseUrl: 'https://github.com/maximelebreton/quick-javascript-switcher/releases/download/latest/quick-javascript-switcher.crx'
 
