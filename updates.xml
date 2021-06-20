@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
+  <app appid='njccaledehimfapjafihbdalapfcfjak'>
+    <updatecheck codebase='https://github.com/maximelebreton/quick-javascript-switcher/releases/download/latest/quick-javascript-switcher.crx' version='1.4.4' prodversionmin='16.0' />
+  </app>
+</gupdate>
