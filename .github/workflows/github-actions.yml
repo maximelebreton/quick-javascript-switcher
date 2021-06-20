@@ -16,7 +16,6 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run zip --if-present
-
       - uses: cardinalby/webext-buildtools-chrome-crx-action@v2
         with:
           zipFilePath: 'quick-javascript-switcher.zip',
@@ -24,7 +23,6 @@ jobs:
           privateKey: ${{ secrets.CHROME_CRX_PRIVATE_KEY }},
           updateXmlPath: 'update.xml',      
           updateXmlCodebaseUrl: 'https://github.com/maximelebreton/quick-javascript-switcher/releases/download/latest/quick-javascript-switcher.crx'
-
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
