@@ -25,13 +25,12 @@ jobs:
           files: |
             quick-javascript-switcher.zip
 
-
-# - name: Chrome Extension upload & publish
-#   uses: Passiverecords/chrome-extension-upload-action@1.4.1
-#   with:
-#     refresh-token: 'xxxxxxxxxxxxxxxxxxxxxx'
-#     client-id: 'xxxxxxxxxxxxx'
-#     client-secret: 'xxxxxxxxxxxx'
-#     file-name: './extension.zip'
-#     app-id: 'geddoclleiomckbhadiaipdggiiccfje'
-#     publish: false
+      - name: Chrome Extension upload & publish
+        uses: Passiverecords/chrome-extension-upload-action@1.4.1
+        with:
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          file-name: './quick-javascript-switcher.zip'
+          app-id: 'geddoclleiomckbhadiaipdggiiccfje'
+          publish: false
