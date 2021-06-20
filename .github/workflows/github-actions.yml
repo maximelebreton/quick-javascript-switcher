@@ -31,6 +31,6 @@ jobs:
           client-id: ${{ secrets.CHROME_CLIENT_ID }}
           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
           refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-          file-name: './quick-javascript-switcher.zip'
+          file-name: 'quick-javascript-switcher.zip'
           app-id: 'geddoclleiomckbhadiaipdggiiccfje'
           publish: false
