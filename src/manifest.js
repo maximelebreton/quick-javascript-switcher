@@ -1,6 +1,6 @@
 module.exports = {
   manifest_version: 2,
-  name: "Quick Javascript Switcher 2",
+  name: "Quick Javascript Switcher",
   description: "The one-click JavaScript Switcher",
   version: process.env.VUE_APP_VERSION,
   minimum_chrome_version: "16.0",
