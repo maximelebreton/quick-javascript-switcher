@@ -1,0 +1,1 @@
+import { RuleSetting } from "./contentsettings";

@@ -1,29 +1,43 @@
 {
-  "name": "quick-javascript-switcher",
-  "version": "1.3.2",
-  "description": "ok",
-  "main": "core.js",
-  "dependencies": {},
+  "name": "qjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint",
+    "build-watch": "vue-cli-service build-watch --mode development"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "lodash": "^4.17.21",
+    "tldts": "^5.7.38",
+    "vue": "^3.0.0"
+  },
   "devDependencies": {
-    "gulp-minify-css": "^0.3.4",
-    "gulp-jshint": "^1.5.5",
-    "gulp-zip": "^0.3.4",
-    "gulp-cleanhtml": "0.0.2",
-    "gulp-uglify": "^0.2.1",
-    "gulp": "^3.6.2",
-    "gulp-strip-debug": "^0.3.0",
-    "gulp-clean": "^0.2.4"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/maximelebreton/quick-javascript-switcher.git"
-  },
-  "keywords": [
-    "javascript"
-  ],
-  "author": "Maxime Le Breton",
-  "bugs": {
-    "url": "https://github.com/maximelebreton/quick-javascript-switcher/issues"
-  },
-  "homepage": "https://github.com/maximelebreton/quick-javascript-switcher"
+    "@types/chrome": "0.0.75",
+    "@types/jest": "^24.0.19",
+    "@types/lodash": "^4.14.170",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-plugin-unit-jest": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "@vue/test-utils": "^2.0.0-0",
+    "copy-webpack-plugin": "^4.6.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.0.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.2",
+    "typescript": "~4.1.5",
+    "vue-cli-plugin-chrome-extension-cli": "~1.0.5",
+    "vue-jest": "^5.0.0-0"
+  }
 }
