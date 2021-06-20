@@ -22,8 +22,9 @@ jobs:
         with:
           extensionDir: 'dist'
           zipFilePath: 'quick-javascript-switcher.zip'
-
-      - uses: cardinalby/webext-buildtools-chrome-crx-action@v2
+  
+      - id: buildCrx
+        uses: cardinalby/webext-buildtools-chrome-crx-action@v2
         with:
           zipFilePath: 'quick-javascript-switcher.zip'
           crxFilePath: 'quick-javascript-switcher.crx'
