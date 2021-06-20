@@ -20,7 +20,7 @@ jobs:
       - id: packExtensionDir
         uses: cardinalby/webext-buildtools-pack-extension-dir-action@v1
         with:
-          extensionDir: 'dist'
+          extensionDir: '.build/'
           zipFilePath: 'quick-javascript-switcher.zip'
   
       - id: buildCrx
