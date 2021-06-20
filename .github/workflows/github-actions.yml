@@ -4,8 +4,8 @@ on:
     branches:
       - "2.0"
 jobs:
-  tagged-release:
-    name: "Tagged Release"
+  pre-release:
+    name: "Release"
     runs-on: "ubuntu-latest"
 
     steps:
@@ -20,7 +20,8 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
+          automatic_release_tag: "latest"
+          prerelease: true
           files: |
             quick-javascript-switcher.zip
 
