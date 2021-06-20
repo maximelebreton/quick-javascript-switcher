@@ -4,6 +4,7 @@ module.exports = {
     node: true,
     webextensions: true,
   },
+  plugins: ["prettier"],
   extends: [
     "plugin:vue/vue3-essential",
     "eslint:recommended",
@@ -17,6 +18,7 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     "prettier/prettier": "warn",
   },
+
   overrides: [
     {
       files: [
