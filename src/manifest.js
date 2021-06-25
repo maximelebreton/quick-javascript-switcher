@@ -2,7 +2,7 @@ module.exports = {
   manifest_version: 2,
   name: "Quick Javascript Switcher",
   description: "The one-click JavaScript Switcher",
-  version: process.env.VUE_APP_VERSION,
+  version: process.env.VUE_APP_VERSION.replace("-beta", ""),
   minimum_chrome_version: "16.0",
   homepage_url: "https://github.com/maximelebreton/quick-javascript-switcher",
   permissions: [
