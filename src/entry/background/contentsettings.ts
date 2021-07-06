@@ -1,6 +1,6 @@
 import { isValidPrimaryPattern } from "../options/computed";
 import { clearJavascriptRules, handleClear, reloadTab } from "./actions";
-import { isAllowedPattern } from "./utils";
+import { cl, isAllowedPattern, Log } from "./utils";
 import { updateIcon } from "./icon";
 import {
   getStorageRules,
@@ -59,7 +59,7 @@ export const setJavascriptRule = ({
       scope,
     };
 
-    console.log(isAllowedPattern(primaryPattern), "IS ALLOWED?");
+    // console.log(isAllowedPattern(primaryPattern), "IS ALLOWED?");
     if (!isAllowedPattern(primaryPattern)) {
       return;
     }
@@ -79,6 +79,7 @@ export const setJavascriptRule = ({
 };
 
 export const addJavascriptRule = async (rule: QJS.ContentSettingRule) => {
+  cl(rule, Log.RULES);
   return new Promise<void>((resolve, reject) => {
     chrome.contentSettings.javascript.set(rule, async () => {
       console.info(
@@ -113,6 +114,7 @@ export const removeJavascriptRule = async (
   return new Promise<void>(async (resolve, reject) => {
     const storageRules = await getStorageRules();
     if (
+      storageRules &&
       storageRules[rule.primaryPattern] &&
       storageRules[rule.primaryPattern].scope === rule.scope
     ) {

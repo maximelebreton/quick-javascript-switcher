@@ -1,4 +1,4 @@
-import state, { isPausedTab } from "./state";
+import { isPausedTab, updateState } from "./state";
 import { getActiveTab } from "./tabs";
 import {
   handleAllowDomain,
@@ -18,12 +18,14 @@ import {
   handlePlayPause,
 } from "./actions";
 import {
+  cl,
   getDomainPatternFromUrl,
   getScopeSetting,
   getSubdomainPatternFromUrl,
   getUrlAsObject,
   getUrlPatternFromUrl,
   isAllowedUrl,
+  Log,
 } from "./utils";
 import {
   getDomainSetting,
@@ -115,7 +117,12 @@ export const addContextMenu = ({
   parentId?: ContextMenus;
   dynamicTitle?: boolean;
 }) => {
-  state.contextMenus[id] = chrome.contextMenus.create({
+  // await updateState({
+  //   contextMenus: {
+  //     [id]: ,
+  //   },
+  // });
+  chrome.contextMenus.create({
     id: id,
     title: dynamicTitle ? dynamicTitles[id].allow : titles[id],
     type: "normal",
@@ -186,13 +193,19 @@ export const createContextMenus = () => {
   //   contexts: CONTEXTS,
   // });
 
-  state.contextMenus["separator-1"] = chrome.contextMenus.create({
+  // updateState({
+  //   contextMenus: {
+  //     "separator-1": ,
+  //     [ContextMenus.MORE]: ,
+  //   },
+  // });
+  chrome.contextMenus.create({
     id: "separator-1",
     type: "separator",
     contexts: CONTEXTS,
   });
 
-  state.contextMenus[ContextMenus.MORE] = chrome.contextMenus.create({
+  chrome.contextMenus.create({
     id: ContextMenus.MORE,
     title: titles[ContextMenus.MORE],
     type: "normal",
@@ -204,15 +217,19 @@ export const createContextMenus = () => {
     parentId: ContextMenus.MORE,
   });
 
-  state.contextMenus[ContextMenus.CHROME_SETTINGS] = chrome.contextMenus.create(
-    {
-      id: ContextMenus.CHROME_SETTINGS,
-      title: titles[ContextMenus.CHROME_SETTINGS],
-      type: "normal",
-      contexts: CONTEXTS,
-      parentId: ContextMenus.MORE,
-    }
-  );
+  // await updateState({
+  //   contextMenus: {
+  //     [ContextMenus.CHROME_SETTINGS]: ,
+  //   },
+  // });
+
+  chrome.contextMenus.create({
+    id: ContextMenus.CHROME_SETTINGS,
+    title: titles[ContextMenus.CHROME_SETTINGS],
+    type: "normal",
+    contexts: CONTEXTS,
+    parentId: ContextMenus.MORE,
+  });
 
   addContextMenu({
     id: ContextMenus.DANGER_ZONE,
@@ -240,7 +257,12 @@ export const createContextMenus = () => {
   //   parentId: ContextMenus.MORE,
   // });
 
-  state.contextMenus[ContextMenus.SUPPORT] = chrome.contextMenus.create({
+  //  updateState({
+  //   contextMenus: {
+  //     [ContextMenus.CHROME_SETTINGS]: ,
+  //   },
+  // });
+  chrome.contextMenus.create({
     id: ContextMenus.SUPPORT,
     title: titles[ContextMenus.SUPPORT],
     type: "normal",
@@ -311,6 +333,8 @@ export const updateSubdomainContextMenu = async (tab: chrome.tabs.Tab) => {
   //   }`,
   //   enabled: subdomain && isAllowedUrl(tab.url!) ? true : false,
   // });
+
+  return Promise.resolve();
 };
 
 export const updateDomainContextMenu = async (tab: chrome.tabs.Tab) => {
@@ -346,15 +370,23 @@ export const updateDomainContextMenu = async (tab: chrome.tabs.Tab) => {
   //   }`,
   //   enabled: domainPattern && isAllowedUrl(tab.url!) ? true : false,
   // });
+
+  return Promise.resolve();
 };
 
 export const updatePlayPauseContextMenu = async (tab: chrome.tabs.Tab) => {
   const PLAY = "Play JS (no refresh)";
   const PAUSE = "Pause JS (no refresh)";
-  chrome.contextMenus.update(ContextMenus.PLAY_PAUSE, {
-    title: isPausedTab(tab) ? PLAY : PAUSE,
-    enabled: isAllowedUrl(tab.url!) ? true : false,
-  });
+  chrome.contextMenus.update(
+    ContextMenus.PLAY_PAUSE,
+    {
+      title: (await isPausedTab(tab)) ? PLAY : PAUSE,
+      enabled: isAllowedUrl(tab.url!) ? true : false,
+    },
+    () => {
+      return Promise.resolve();
+    }
+  );
 };
 
 // export const updateUrlContextMenu = async (tab: chrome.tabs.Tab) => {
@@ -373,18 +405,20 @@ export const updatePlayPauseContextMenu = async (tab: chrome.tabs.Tab) => {
 //     });
 // }
 
-export const updateSupportMenu = () => {};
+export const updateSupportMenu = async () => {
+  return Promise.resolve();
+};
 
 export const updateContextMenus = async () => {
-  const activeTab = await getActiveTab();
-  console.log(activeTab, "activeTab");
-  await getStorageRules();
+  cl("Start update context menus", Log.CONTEXT_MENUS);
 
+  const activeTab = await getActiveTab();
+  cl("Ok for active Tab", Log.CONTEXT_MENUS);
   if (activeTab && activeTab.url) {
-    updateSubdomainContextMenu(activeTab);
-    updateDomainContextMenu(activeTab);
-    updatePlayPauseContextMenu(activeTab);
-    updateSupportMenu();
+    await updateSubdomainContextMenu(activeTab);
+    await updateDomainContextMenu(activeTab);
+    await updatePlayPauseContextMenu(activeTab);
+    await updateSupportMenu();
 
     chrome.contextMenus.update(ContextMenus.SHORTCUT, {
       title: `Shortcut: ${await getDefaultShortcut()}`,
@@ -393,15 +427,19 @@ export const updateContextMenus = async () => {
     // updateClearContextMenus(activeTab)
     // updateUrlContextMenu(activeTab)
   }
+  cl("Ok for updates, launch resolve", Log.CONTEXT_MENUS);
+  return Promise.resolve();
 };
 
 export const getDefaultShortcut = async () => {
   return new Promise((resolve, reject) => {
     chrome.commands.getAll((commands) => {
       console.log(commands, "commands");
-      const shortcut = commands.find(
-        (command) => command.name === "_execute_action"
-      )?.shortcut;
+      const shortcut =
+        commands.find(
+          // (command) => command.name === "_execute_bowser_action"
+          (command) => command.name === "_execute_action"
+        )?.shortcut || "";
       resolve(shortcut);
     });
   });

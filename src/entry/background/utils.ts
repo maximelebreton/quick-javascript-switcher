@@ -1,6 +1,35 @@
 import { parse } from "tldts";
 import { getJavascriptRuleSetting } from "./contentsettings";
 
+export enum Log {
+  EVENTS = "EVENTS",
+  TABS = "TABS",
+  RULES = "RULES",
+  STORAGE = "STORAGE",
+  ACTIONS = "ACTIONS",
+  ICON = "ICON",
+  CONTEXT_MENUS = "CONTEXT_MENUS",
+}
+
+export const cl = (message: any, type?: Log, name?: string) => {
+  const DEBUG = {
+    [Log.ACTIONS]: false,
+    [Log.TABS]: false,
+    [Log.RULES]: false,
+    [Log.STORAGE]: false,
+    [Log.EVENTS]: false,
+    [Log.ICON]: false,
+    [Log.CONTEXT_MENUS]: false,
+  };
+
+  if (type && DEBUG[type] === true) {
+    console.log(message, name);
+  }
+  if (!type) {
+    console.log(message, name);
+  }
+};
+
 export const getUrlPatterns = (url: string) => {
   const { scheme, schemeSuffix, subdomain, domain, path } = getUrlAsObject(url);
 
@@ -154,3 +183,15 @@ export const isAllowedPattern = (input: string) => {
   match_pattern += "$)";
   return match_pattern === null ? false : true;
 };
+
+export const retry = <T>(fn: () => Promise<T>, ms: number): Promise<T> =>
+  new Promise((resolve) => {
+    fn()
+      .then(resolve)
+      .catch(() => {
+        setTimeout(() => {
+          console.log("retrying...");
+          retry(fn, ms).then(resolve);
+        }, ms);
+      });
+  });

@@ -1,6 +1,6 @@
-import state from "./state";
-
 // export const storeActiveTab = async (tabId: number) => {
+
+import { cl, Log, retry } from "./utils";
 
 //     chrome.tabs.get(tabId, (tab) => {
 //         console.log(tab)
@@ -11,6 +11,10 @@ import state from "./state";
 // }
 
 export const getActiveTab = async () => {
+  return retry(handleGetActiveTab, 100);
+};
+
+export const handleGetActiveTab = async () => {
   return new Promise<chrome.tabs.Tab>((resolve, reject) => {
     chrome.tabs.query(
       {
@@ -21,11 +25,14 @@ export const getActiveTab = async () => {
       async (tabs) => {
         // FIX Chrome 91 bug or feature: https://stackoverflow.com/questions/67822816/tabs-cannot-be-queried-right-now-user-may-be-dragging-a-tab
         if (chrome.runtime.lastError) {
-          const time = 100;
-          setTimeout(() => {}, time);
+          console.log("re");
+          return reject();
         } else {
           var tab = tabs[0];
-          return resolve(tab);
+          if (tab) {
+            cl(`Active tab is ${tab.url}`, Log.TABS);
+            return resolve(tab);
+          }
         }
       }
     );

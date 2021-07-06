@@ -1,6 +1,7 @@
-import state from "./state";
 import { merge } from "lodash";
 import { RuleSetting } from "./contentsettings";
+import { getState, State } from "./state";
+import { cl, Log } from "./utils";
 
 export namespace QJS {
   export type ContentSettingRule = {
@@ -9,28 +10,44 @@ export namespace QJS {
     setting: RuleSetting;
     scope: "incognito_session_only" | "regular";
   };
+  export type ContentSettingRules = { [key: string]: ContentSettingRule };
   export type Storage = {
     rules: string;
+    state: string;
   };
 }
 
-export const getStorageMethod = () => {
-  if (state.options.useSync === true) {
-    return chrome.storage.sync;
-  } else {
-    return chrome.storage.local;
-  }
+export const getStorageMethod = async () => {
+  return new Promise<any>((resolve, reject) => {
+    chrome.storage.local.get(["state"], (value) => {
+      const state: State = value["state"] ? JSON.parse(value["state"]) : {};
+
+      if (state && state.options && state.options.useSync === true) {
+        resolve(chrome.storage.sync);
+      } else {
+        resolve(chrome.storage.local);
+      }
+    });
+  });
+
+  // if (state.options.useSync === true) {
+  //   return chrome.storage.sync;
+  // } else {
+  //   return chrome.storage.local;
+  // }
 };
 
-export const getStorage = async (name: string) => {
-  return new Promise<QJS.Storage>((resolve, reject) => {
-    getStorageMethod().get([name], (value) => {
+export const getStorage = async (name: keyof QJS.Storage) => {
+  const storageMethod = await getStorageMethod();
+  return new Promise<any>((resolve, reject) => {
+    storageMethod.get([name], (value: any) => {
       let result;
-      if (typeof value === "string") {
-        result = JSON.parse(value);
-      } else {
-        result = value;
-      }
+      // console.log("VALUE", value);
+      cl(value, Log.STORAGE);
+
+      result = value[name] ? JSON.parse(value[name]) : {};
+
+      cl(result, Log.STORAGE);
       resolve(result);
     });
   });
@@ -40,14 +57,15 @@ export const getStorageRules = async () => {
   return new Promise<{
     [key: string]: QJS.ContentSettingRule;
   }>(async (resolve, reject) => {
-    const storage = await getStorage("rules");
-    const rules = storage.rules ? JSON.parse(storage.rules) : {};
+    const rules = (await getStorage("rules")) as QJS.ContentSettingRules;
+    cl(rules, Log.RULES, "rules");
     resolve(rules);
   });
 };
 
-export const clearStorageRules = () => {
-  getStorageMethod().clear(() => {
+export const clearStorageRules = async () => {
+  const storageMethod = await getStorageMethod();
+  storageMethod.clear(() => {
     console.info("Stored rules clear");
   });
 };
@@ -77,8 +95,9 @@ export const setStorageRules = async (rule: QJS.ContentSettingRule) => {
 };
 
 export const setStorage = async (name: string, value: any) => {
-  return new Promise<void>(async (resolve, reject) => {
-    getStorageMethod().set({ [name]: JSON.stringify(value) }, () => {
+  const storageMethod = await getStorageMethod();
+  return new Promise<void>((resolve, reject) => {
+    storageMethod.set({ [name]: JSON.stringify(value) }, () => {
       resolve();
     });
   });

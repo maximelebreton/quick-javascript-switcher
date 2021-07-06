@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "deepmerge": "^4.2.2",
     "lodash": "^4.17.21",
     "tldts": "^5.7.38",
     "vue": "^3.0.0"

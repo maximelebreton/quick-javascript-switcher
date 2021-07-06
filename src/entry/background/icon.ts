@@ -1,8 +1,15 @@
 import { getJavascriptRuleSetting } from "./contentsettings";
-import { getScopeSetting, getUrlAsObject, isValidScheme } from "./utils";
-import state from "./state";
+import { isPausedTab } from "./state";
+import {
+  cl,
+  getScopeSetting,
+  getUrlAsObject,
+  isValidScheme,
+  Log,
+} from "./utils";
 
 export const updateIcon = async (tab: chrome.tabs.Tab) => {
+  cl("ICON UPDATED", Log.ICON);
   if (tab && tab.url) {
     const ruleSetting = await getJavascriptRuleSetting({
       primaryUrl: tab.url,
@@ -16,9 +23,8 @@ export const updateIcon = async (tab: chrome.tabs.Tab) => {
     //   console.log(attachedTarget);
     // });
 
-    const isPaused = Object.values(state.tabs).some(
-      (stateTab) => stateTab.id === tab.id && stateTab.paused === true
-    );
+    const isPaused = await isPausedTab(tab);
+
     const { scheme } = getUrlAsObject(tab.url!);
 
     if (isPaused) {
@@ -38,4 +44,5 @@ export const updateIcon = async (tab: chrome.tabs.Tab) => {
       });
     }
   }
+  return Promise.resolve();
 };

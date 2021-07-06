@@ -8,8 +8,10 @@ import {
 } from "./contentsettings";
 import { updateContextMenus } from "./contextmenus";
 import { updateIcon } from "./icon";
-import state, { isPausedTab, isPausedTabs } from "./state";
+import { getState, isPausedTab, isPausedTabs, updateState } from "./state";
 import { clearStorageRules } from "./storage";
+import { getActiveTab } from "./tabs";
+import { cl, Log } from "./utils";
 
 import {
   getDomainPatternFromUrl,
@@ -19,16 +21,17 @@ import {
   getUrlPatternFromUrl,
 } from "./utils";
 
-export const handleIconClick = (tab: chrome.tabs.Tab) => {
+export const handleIconClick = async (tab: chrome.tabs.Tab) => {
   //handlePlayPause(tab);
-  toggleJavaScript(tab);
+  await toggleJavaScript(tab);
 };
 
 export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
-  const rule = await getJavascriptRuleSetting({
-    primaryUrl: tab.url!,
-    incognito: tab.incognito,
-  });
+  cl("Toggle JavaScript", Log.ACTIONS);
+  // const rule = await getJavascriptRuleSetting({
+  //   primaryUrl: tab.url!,
+  //   incognito: tab.incognito,
+  // });
 
   // const blockedSubdomainAndDomain =
   //   (await getSubdomainSetting(tab)) === "block" &&
@@ -43,23 +46,23 @@ export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
   //   (await getSubdomainSetting(tab)) === "allow" &&
   //   (await getDomainSetting(tab)) === "allow";
 
-  if (isPausedTab(tab)) {
-    handlePlay(tab);
+  if (await isPausedTab(tab)) {
+    await handlePlay(tab);
   } else {
     const { subdomain } = await getUrlAsObject(tab.url!);
     const setting = await getTabSetting(tab);
-
+    cl(`setting for ${tab.url} : ${setting}`, Log.ACTIONS);
     if (setting === "allow") {
       if (subdomain.length) {
-        handleBlockSubdomain(tab);
+        await handleBlockSubdomain(tab);
       } else {
-        handleBlockDomain(tab);
+        await handleBlockDomain(tab);
       }
     } else {
       if (subdomain.length) {
-        handleClearSubdomain(tab);
+        await handleClearSubdomain(tab);
       } else {
-        handleClearDomain(tab);
+        await handleClearDomain(tab);
       }
     }
   }
@@ -80,17 +83,20 @@ export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
   // }
 };
 
-export const handlePlayPause = (tab: chrome.tabs.Tab) => {
-  if (isPausedTab(tab)) {
-    handlePlay(tab);
+export const handlePlayPause = async (tab: chrome.tabs.Tab) => {
+  if (await isPausedTab(tab)) {
+    await handlePlay(tab);
   } else {
-    handlePause(tab);
+    await handlePause(tab);
   }
 };
 
 export const clearJavascriptRules = () => {
-  chrome.contentSettings.javascript.clear({ scope: "regular" }, () => {
+  chrome.contentSettings.javascript.clear({ scope: "regular" }, async () => {
     console.info("QJS javascript rules cleared!");
+    await updateContextMenus();
+    const tab = await getActiveTab();
+    await updateIcon(tab);
   });
 };
 
@@ -100,12 +106,13 @@ export const handleOpenShortcut = () => {
   });
 };
 
-export const handleOpenPopup = (tab: chrome.tabs.Tab) => {
+export const handleOpenPopup = async (tab: chrome.tabs.Tab) => {
   // chrome.action.setPopup({ popup: "popup.html", tabId: tab.id });
   // console.log("ok");
   const width = 320;
   const height = 532;
   const top = 67;
+  const state = await getState();
   chrome.windows.create(
     {
       left: width,
@@ -119,11 +126,17 @@ export const handleOpenPopup = (tab: chrome.tabs.Tab) => {
     },
     (window) => {
       state.popup = window!;
-      chrome.windows.update(window!.id!, {
-        left: tab.width! - width,
-        top: top,
-        width: width + 1,
-      });
+      chrome.windows.update(
+        window!.id!,
+        {
+          left: tab.width! - width,
+          top: top,
+          width: width + 1,
+        },
+        () => {
+          return Promise.resolve();
+        }
+      );
     }
   );
 };
@@ -158,53 +171,67 @@ export const setScriptExecutionDisabled = (
   );
 };
 
-export const handlePlay = (tab: chrome.tabs.Tab) => {
-  setScriptExecutionDisabled(false, tab, () => {
+export const handlePlay = async (tab: chrome.tabs.Tab) => {
+  cl("HANDLE PLAY", Log.ACTIONS);
+  setScriptExecutionDisabled(false, tab, async () => {
     if (tab.id) {
-      state.tabs[tab.id] = { id: tab.id, paused: false };
-    }
-    handleDetach(tab);
-    updateContextMenus();
-
-    if (!isPausedTabs()) {
-      chrome.debugger.detach({ tabId: tab.id }, () => {
-        // console.log("detach all");
+      // state.tabs[tab.id] = { id: tab.id, paused: false };
+      await updateState({
+        tabs: { [tab.id]: { id: tab.id, paused: false } },
       });
     }
+    handleDetach(tab);
+    await updateContextMenus();
+
+    if ((await isPausedTabs()) === false) {
+      chrome.debugger.detach({ tabId: tab.id }, () => {
+        console.log("detach all");
+        return Promise.resolve();
+      });
+    } else {
+      return Promise.resolve();
+    }
   });
 };
 
-export const handleDetach = (tab: chrome.tabs.Tab) => {
+export const handleDetach = async (tab: chrome.tabs.Tab) => {
   if (tab.id) {
-    delete state.tabs[tab.id];
+    // delete state.tabs[tab.id];
+    await updateState({
+      tabs: { [tab.id]: undefined },
+    });
   }
-  updateContextMenus();
-  updateIcon(tab);
+  await updateContextMenus();
+  await updateIcon(tab);
 };
 
-export const handlePause = (tab: chrome.tabs.Tab) => {
+export const handlePause = async (tab: chrome.tabs.Tab) => {
+  cl("HANDLE PAUSE", Log.ACTIONS);
   chrome.debugger.attach({ tabId: tab.id }, "1.0", () => {
-    chrome.debugger.onDetach.addListener((source, reason) => {
+    chrome.debugger.onDetach.addListener(async (source, reason) => {
       // console.log("Debugger DETACHED !!!");
-      handleDetach(tab);
+      await handleDetach(tab);
     });
 
-    setScriptExecutionDisabled(true, tab, () => {
+    setScriptExecutionDisabled(true, tab, async () => {
       if (tab.id) {
-        state.tabs[tab.id] = { id: tab.id, paused: true };
+        // state.tabs[tab.id] = { id: tab.id, paused: true };
+        await updateState({
+          tabs: { [tab.id]: { id: tab.id, paused: true } },
+        });
       }
-      updateIcon(tab);
-      updateContextMenus();
+      await updateIcon(tab);
+      await updateContextMenus();
     });
   });
 };
 
-export const handleBlockSubdomain = (tab: chrome.tabs.Tab) => {
+export const handleBlockSubdomain = async (tab: chrome.tabs.Tab) => {
   if (tab.url) {
     const primaryPattern = getSubdomainPatternFromUrl(tab.url);
     if (primaryPattern) {
       console.info("block subdomain: " + primaryPattern);
-      setJavascriptRule({
+      await setJavascriptRule({
         primaryPattern,
         scope: getScopeSetting(tab.incognito),
         setting: "block",
@@ -213,12 +240,12 @@ export const handleBlockSubdomain = (tab: chrome.tabs.Tab) => {
     }
   }
 };
-export const handleBlockDomain = (tab: chrome.tabs.Tab) => {
+export const handleBlockDomain = async (tab: chrome.tabs.Tab) => {
   if (tab.url) {
     const primaryPattern = getDomainPatternFromUrl(tab.url);
     if (primaryPattern) {
       console.info("block domain: " + primaryPattern);
-      setJavascriptRule({
+      await setJavascriptRule({
         primaryPattern,
         scope: getScopeSetting(tab.incognito),
         setting: "block",
@@ -227,12 +254,12 @@ export const handleBlockDomain = (tab: chrome.tabs.Tab) => {
     }
   }
 };
-export const handleBlockUrl = (tab: chrome.tabs.Tab) => {
+export const handleBlockUrl = async (tab: chrome.tabs.Tab) => {
   if (tab.url) {
     const primaryPattern = getUrlPatternFromUrl(tab.url);
     if (primaryPattern) {
       console.info("block url: " + primaryPattern);
-      setJavascriptRule({
+      await setJavascriptRule({
         primaryPattern,
         scope: getScopeSetting(tab.incognito),
         setting: "block",
@@ -241,12 +268,13 @@ export const handleBlockUrl = (tab: chrome.tabs.Tab) => {
     }
   }
 };
-export const handleAllowSubdomain = (tab: chrome.tabs.Tab) => {
+export const handleAllowSubdomain = async (tab: chrome.tabs.Tab) => {
+  cl("ALLOW SUBDOMAIN", Log.ACTIONS);
   if (tab.url) {
     const primaryPattern = getSubdomainPatternFromUrl(tab.url);
     if (primaryPattern) {
       console.info("allow subdomain: " + primaryPattern);
-      setJavascriptRule({
+      await setJavascriptRule({
         primaryPattern,
         scope: getScopeSetting(tab.incognito),
         setting: "allow",
@@ -255,12 +283,13 @@ export const handleAllowSubdomain = (tab: chrome.tabs.Tab) => {
     }
   }
 };
-export const handleAllowDomain = (tab: chrome.tabs.Tab) => {
+export const handleAllowDomain = async (tab: chrome.tabs.Tab) => {
+  cl("ALLOW DOMAIN", Log.ACTIONS);
   if (tab.url) {
     const primaryPattern = getDomainPatternFromUrl(tab.url);
     if (primaryPattern) {
       console.info("allow domain: " + primaryPattern);
-      setJavascriptRule({
+      await setJavascriptRule({
         primaryPattern,
         scope: getScopeSetting(tab.incognito),
         setting: "allow",
@@ -269,12 +298,13 @@ export const handleAllowDomain = (tab: chrome.tabs.Tab) => {
     }
   }
 };
-export const handleAllowUrl = (tab: chrome.tabs.Tab) => {
+export const handleAllowUrl = async (tab: chrome.tabs.Tab) => {
+  cl("ALLOW URL", Log.ACTIONS);
   if (tab.url) {
     const primaryPattern = `${tab.url}`;
     if (primaryPattern) {
       console.info("allow url: " + primaryPattern);
-      setJavascriptRule({
+      await setJavascriptRule({
         primaryPattern,
         scope: getScopeSetting(tab.incognito),
         setting: "allow",
@@ -285,6 +315,7 @@ export const handleAllowUrl = (tab: chrome.tabs.Tab) => {
 };
 
 export const handleClearSubdomain = async (tab: chrome.tabs.Tab) => {
+  cl("CLEAR SUBDOMAIN", Log.ACTIONS);
   const primaryPattern = getSubdomainPatternFromUrl(tab.url!);
   if (primaryPattern) {
     await removeJavascriptRule({
@@ -296,6 +327,8 @@ export const handleClearSubdomain = async (tab: chrome.tabs.Tab) => {
   }
 };
 export const handleClearDomain = async (tab: chrome.tabs.Tab) => {
+  cl("CLEAR DOMAIN", Log.ACTIONS);
+
   const primaryPattern = getDomainPatternFromUrl(tab.url!);
   if (primaryPattern) {
     await removeJavascriptRule({

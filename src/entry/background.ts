@@ -1,17 +1,21 @@
 import { rebaseJavascriptSettingsFromStorage } from "./background/contentsettings";
 import { initContextMenus } from "./background/contextmenus";
 import { initEvents } from "./background/events";
+import { initState } from "./background/state";
 import { initTabs } from "./background/tabs";
 
 console.log("hello doom world background todo something~");
 
-const init = () => {
+const init = async () => {
   chrome.storage.onChanged.addListener(async (changes, areaName) => {
-    console.log(changes, "changes");
-    console.log(areaName, "areaname");
-    const { newValue, oldValue } = changes;
-    if (newValue !== oldValue) {
-      await rebaseJavascriptSettingsFromStorage();
+    if (changes.rules) {
+      console.log(changes, "rules changes");
+      console.log(areaName, "areaname");
+      const { newValue, oldValue } = changes;
+
+      if (newValue !== oldValue) {
+        await rebaseJavascriptSettingsFromStorage();
+      }
     }
   });
 
@@ -33,6 +37,7 @@ const init = () => {
     }
   });
 
+  initState();
   initContextMenus();
   initEvents();
   initTabs();
