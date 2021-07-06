@@ -5,27 +5,38 @@ import state from "./state";
 import { getStorageRules } from "./storage";
 import { getActiveTab } from "./tabs";
 
-export const handleUpdates = async () => {
-  const tab = await getActiveTab();
-  await getStorageRules();
-  await updateContextMenus();
-};
+// export const handleUpdates = async () => {
+//   await updateContextMenus();
+// };
 
 export const initEvents = () => {
   // On active tab
   chrome.tabs.onActivated.addListener(async ({ tabId }) => {
     //console.info("onHighlighted");
     // storeTabSettings()
-
-    await handleUpdates();
+    console.info("tab activated!");
+    await updateContextMenus();
     chrome.tabs.get(tabId, async (tab) => {
       await updateIcon(tab);
     });
   });
 
+  // On Tab update
+  chrome.tabs.onUpdated.addListener(async (tabId, props, tab) => {
+    console.info("tab updated!");
+    // Prevent multiple calls
+    if (props.status === "loading" && tab.selected) {
+      console.info("tab updated 2!");
+      //console.info("onUpdated");
+      await updateContextMenus();
+      await updateIcon(tab);
+    }
+  });
+
   // On Window changes
   chrome.windows.onFocusChanged.addListener(async (windowId) => {
-    await handleUpdates();
+    console.info("window focus changed!");
+    await updateContextMenus();
 
     if (state && state.popup) {
       // CLOSE POPUP
@@ -38,20 +49,10 @@ export const initEvents = () => {
     }
   });
 
-  // On Tab update
-  chrome.tabs.onUpdated.addListener(async (tabId, props, tab) => {
-    // Prevent multiple calls
-    if (props.status === "loading" && tab.selected) {
-      //console.info("onUpdated");
-      await handleUpdates();
-      await updateIcon(tab);
-    }
-  });
-
   // chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {});
 
   chrome.runtime.onInstalled.addListener(async () => {
-    await handleUpdates();
+    await updateContextMenus();
     const tab = await getActiveTab();
     await updateIcon(tab);
   });
@@ -62,7 +63,7 @@ export const initEvents = () => {
     }
   });
 
-  chrome.browserAction.onClicked.addListener((tab) => {
+  chrome.action.onClicked.addListener((tab) => {
     if (tab) {
       handleIconClick(tab);
     }

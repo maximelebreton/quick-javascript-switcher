@@ -33,6 +33,7 @@
     "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^2.0.0-0",
     "bestzip": "^2.2.0",
+    "chrome-types": "^0.1.16",
     "copy-webpack-plugin": "^4.6.0",
     "eslint": "^6.7.2",
     "eslint-plugin-only-warn": "^1.0.2",

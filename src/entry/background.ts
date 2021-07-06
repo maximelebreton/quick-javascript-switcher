@@ -15,11 +15,8 @@ const init = () => {
     }
   });
 
-  chrome.runtime.onMessage.addListener(function (
-    message,
-    sender,
-    sendResponse
-  ) {
+  //@ts-ignore
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.popupOpen === true) {
       console.log("it's working !");
     }

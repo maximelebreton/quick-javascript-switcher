@@ -1,6 +1,6 @@
 const state = {
   activeTab: null as unknown as chrome.tabs.Tab,
-  contextMenus: {} as { [key: string]: void },
+  contextMenus: {} as { [key: string]: any },
   tabs: {} as {
     [key: number]: {
       id: chrome.tabs.Tab["id"];

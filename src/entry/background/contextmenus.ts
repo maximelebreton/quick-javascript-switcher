@@ -31,6 +31,7 @@ import {
   getSubdomainSetting,
   getTabSetting,
 } from "./contentsettings";
+import { getStorageRules } from "./storage";
 
 export enum ContextMenus {
   PLAY_PAUSE = "PLAY_PAUSE",
@@ -55,6 +56,12 @@ export enum ContextMenus {
   SHORTCUT = "SHORTCUT",
   DANGER_ZONE = "DANGER_ZONE",
 }
+
+const CONTEXTS: [
+  chrome.contextMenus.ContextType,
+  ...chrome.contextMenus.ContextType[]
+] = ["action"];
+
 const titles = {
   [ContextMenus.PLAY_PAUSE]: "Pause JavaScript",
   [ContextMenus.BLOCK]: "Block",
@@ -112,7 +119,7 @@ export const addContextMenu = ({
     id: id,
     title: dynamicTitle ? dynamicTitles[id].allow : titles[id],
     type: "normal",
-    contexts: ["browser_action"],
+    contexts: CONTEXTS,
     parentId,
   });
 };
@@ -169,27 +176,27 @@ export const createContextMenus = () => {
   //     "id": ContextMenus.ALLOW_URL,
   //     "title": titles[ContextMenus.ALLOW_URL],
   //     "type": "normal",
-  //     "contexts": ["browser_action"],
+  //     "contexts": CONTEXTS,
   //     "parentId": ContextMenus.ALLOW
   // })
 
   // state.contextMenus["separator-2"] = chrome.contextMenus.create({
   //   id: "separator-2",
   //   type: "separator",
-  //   contexts: ["browser_action"],
+  //   contexts: CONTEXTS,
   // });
 
   state.contextMenus["separator-1"] = chrome.contextMenus.create({
     id: "separator-1",
     type: "separator",
-    contexts: ["browser_action"],
+    contexts: CONTEXTS,
   });
 
   state.contextMenus[ContextMenus.MORE] = chrome.contextMenus.create({
     id: ContextMenus.MORE,
     title: titles[ContextMenus.MORE],
     type: "normal",
-    contexts: ["browser_action"],
+    contexts: CONTEXTS,
   });
 
   addContextMenu({
@@ -202,7 +209,7 @@ export const createContextMenus = () => {
       id: ContextMenus.CHROME_SETTINGS,
       title: titles[ContextMenus.CHROME_SETTINGS],
       type: "normal",
-      contexts: ["browser_action"],
+      contexts: CONTEXTS,
       parentId: ContextMenus.MORE,
     }
   );
@@ -221,7 +228,7 @@ export const createContextMenus = () => {
   //   id: ContextMenus.CLEAR_STORAGE,
   //   title: titles[ContextMenus.CLEAR_STORAGE],
   //   type: "normal",
-  //   contexts: ["browser_action"],
+  //   contexts: CONTEXTS,
   //   parentId: ContextMenus.MORE,
   // });
 
@@ -229,7 +236,7 @@ export const createContextMenus = () => {
   //   id: ContextMenus.OPEN_POPUP,
   //   title: titles[ContextMenus.OPEN_POPUP],
   //   type: "normal",
-  //   contexts: ["browser_action"],
+  //   contexts: CONTEXTS,
   //   parentId: ContextMenus.MORE,
   // });
 
@@ -237,19 +244,19 @@ export const createContextMenus = () => {
     id: ContextMenus.SUPPORT,
     title: titles[ContextMenus.SUPPORT],
     type: "normal",
-    contexts: ["browser_action"],
+    contexts: CONTEXTS,
   });
 
   // state.contextMenus.separator = chrome.contextMenus.create({
   //     "type": "separator",
-  //     "contexts": ["browser_action"]
+  //     "contexts": CONTEXTS
   //   });
 
   //   state.contextMenus.main = chrome.contextMenus.create({
   //     "id": "euh",
   //     "title": "Go ok JavaScript settings",
   //     "type": "normal",
-  //     "contexts": ["browser_action"]
+  //     "contexts": CONTEXTS
   //   }, () => {
   //       console.log('created')
   //       console.log(state.contextMenus)
@@ -370,6 +377,8 @@ export const updateSupportMenu = () => {};
 
 export const updateContextMenus = async () => {
   const activeTab = await getActiveTab();
+  console.log(activeTab, "activeTab");
+  await getStorageRules();
 
   if (activeTab && activeTab.url) {
     updateSubdomainContextMenu(activeTab);
@@ -389,8 +398,9 @@ export const updateContextMenus = async () => {
 export const getDefaultShortcut = async () => {
   return new Promise((resolve, reject) => {
     chrome.commands.getAll((commands) => {
+      console.log(commands, "commands");
       const shortcut = commands.find(
-        (command) => command.name === "_execute_browser_action"
+        (command) => command.name === "_execute_action"
       )?.shortcut;
       resolve(shortcut);
     });

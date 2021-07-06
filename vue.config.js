@@ -32,6 +32,14 @@ const toCopy = [
   //   to: `${path.resolve(outputDir)}/manifest.json`,
   // },
   {
+    from: path.resolve(
+      `src/service-worker.${
+        process.env.NODE_ENV === "development" ? "development" : "production"
+      }.js`
+    ),
+    to: `${path.resolve(outputDir)}/service-worker.js`,
+  },
+  {
     from: path.resolve(`icons/*`),
     to: `${path.resolve(outputDir)}`,
   },
@@ -47,6 +55,7 @@ module.exports = {
   outputDir: outputDir,
   productionSourceMap: productionSourceMap,
   configureWebpack: {
+    devtool: "cheap-module-source-map",
     plugins: [
       CopyWebpackPlugin(toCopy),
       new GenerateJsonFromJsPlugin({

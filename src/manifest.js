@@ -1,5 +1,5 @@
 module.exports = {
-  manifest_version: 2,
+  manifest_version: 3,
   name: "Quick Javascript Switcher",
   description: "The one-click JavaScript Switcher",
   version: process.env.VUE_APP_VERSION.replace("-beta", ""),
@@ -14,11 +14,12 @@ module.exports = {
   ],
   incognito: "spanning",
   background: {
-    scripts:
-      process.env.NODE_ENV === "production"
-        ? ["/js/background.js"]
-        : ["/js/background.js", "/hot-reload.js"],
-    persistent: false,
+    service_worker: "service-worker.js",
+    // scripts:
+    //   process.env.NODE_ENV === "production"
+    //     ? ["/js/background.js"]
+    //     : ["/js/background.js", "/hot-reload.js"],
+    // persistent: false,
   },
   icons: {
     16: "icons/logo-16.png",
@@ -26,17 +27,18 @@ module.exports = {
     128: "icons/logo-128.png",
     256: "icons/logo-256.png",
   },
-  browser_action: {
+  action: {
     default_icon: "icons/disabled@2x.png",
   },
   options_ui: {
     page: "options.html",
-    chrome_style: false,
   },
   options_page: "options.html",
-  content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  content_security_policy: {
+    extension_pages: "script-src 'self'; object-src 'self'",
+  },
   commands: {
-    _execute_browser_action: {
+    _execute_action: {
       suggested_key: {
         default: "Alt+Shift+Q",
         windows: "Alt+Shift+Q",

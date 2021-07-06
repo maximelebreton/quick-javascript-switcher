@@ -1,4 +1,3 @@
-import { getActiveTab } from "./tabs";
 import { getJavascriptRuleSetting } from "./contentsettings";
 import { getScopeSetting, getUrlAsObject, isValidScheme } from "./utils";
 import state from "./state";
@@ -23,17 +22,17 @@ export const updateIcon = async (tab: chrome.tabs.Tab) => {
     const { scheme } = getUrlAsObject(tab.url!);
 
     if (isPaused) {
-      chrome.browserAction.setIcon({
+      chrome.action.setIcon({
         path: "icons/paused.png",
         tabId: tab.id,
       });
     } else if (!isValidScheme(scheme)) {
-      chrome.browserAction.setIcon({
+      chrome.action.setIcon({
         path: "icons/disabled.png",
         tabId: tab.id,
       });
     } else {
-      chrome.browserAction.setIcon({
+      chrome.action.setIcon({
         path: "icons/" + ruleSetting + "@2x.png",
         tabId: tab.id,
       });

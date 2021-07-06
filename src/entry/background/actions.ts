@@ -10,7 +10,7 @@ import { updateContextMenus } from "./contextmenus";
 import { updateIcon } from "./icon";
 import state, { isPausedTab, isPausedTabs } from "./state";
 import { clearStorageRules } from "./storage";
-import { getActiveTab } from "./tabs";
+
 import {
   getDomainPatternFromUrl,
   getScopeSetting,
@@ -101,7 +101,7 @@ export const handleOpenShortcut = () => {
 };
 
 export const handleOpenPopup = (tab: chrome.tabs.Tab) => {
-  // chrome.browserAction.setPopup({ popup: "popup.html", tabId: tab.id });
+  // chrome.action.setPopup({ popup: "popup.html", tabId: tab.id });
   // console.log("ok");
   const width = 320;
   const height = 532;
@@ -119,7 +119,7 @@ export const handleOpenPopup = (tab: chrome.tabs.Tab) => {
     },
     (window) => {
       state.popup = window!;
-      chrome.windows.update(window!.id, {
+      chrome.windows.update(window!.id!, {
         left: tab.width! - width,
         top: top,
         width: width + 1,
@@ -291,7 +291,7 @@ export const handleClearSubdomain = async (tab: chrome.tabs.Tab) => {
       primaryPattern,
       scope: getScopeSetting(tab.incognito),
     });
-    await updateIcon(tab); //not needed because we update tab
+    await updateContextMenus(); //not needed because we update tab
     reloadTab(tab);
   }
 };
