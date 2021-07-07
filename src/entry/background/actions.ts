@@ -173,15 +173,19 @@ export const handleOpenChromeSettings = () => {
     url: "chrome://settings/content/javascript",
   });
 };
+
 export const handleOpenLinkWithJSDisabled = async (
   tab: chrome.tabs.Tab,
   info: chrome.contextMenus.OnClickData
 ) => {
-  console.log(info, "HEYYEY");
   const url = info.linkUrl;
-  const primaryPattern = getDomainPatternFromUrl(url!);
+  const { subdomain } = await getUrlAsObject(url!);
+  const primaryPattern = subdomain.length
+    ? getSubdomainPatternFromUrl(url!)
+    : getDomainPatternFromUrl(url!);
+
   if (primaryPattern) {
-    console.info("block opened link: " + primaryPattern);
+    console.info("Block opened link: " + primaryPattern);
     await setJavascriptRule({
       primaryPattern,
       scope: getScopeSetting(tab.incognito),
