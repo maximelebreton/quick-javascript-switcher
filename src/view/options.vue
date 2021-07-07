@@ -200,7 +200,7 @@
 
               <ul class="list-group list-grou-flush">
                 <li
-                  :key="item + index"
+                  :key="'list-'+index"
                   class="list-group-item d-flex align-items-center"
                   :class="{
                     'list-group-item-warning':
