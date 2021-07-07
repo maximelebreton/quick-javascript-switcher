@@ -1,4 +1,5 @@
 import { handleIconClick, reloadTab } from "./actions";
+import { ACTION_SHORTCUT_NAME } from "./constants";
 import { handleContextMenu, updateContextMenus } from "./contextmenus";
 import { updateIcon } from "./icon";
 
@@ -71,6 +72,15 @@ export const initEvents = () => {
     cl("ON ACTION CLICKED", Log.EVENTS);
     if (tab) {
       await handleIconClick(tab);
+    }
+  });
+
+  chrome.commands.onCommand.addListener(async (command, tab) => {
+    cl(command, Log.EVENTS);
+    if (command === ACTION_SHORTCUT_NAME) {
+      if (tab) {
+        await handleIconClick(tab);
+      }
     }
   });
 };

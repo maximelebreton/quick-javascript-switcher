@@ -34,6 +34,7 @@ import {
   getTabSetting,
 } from "./contentsettings";
 import { getStorageRules } from "./storage";
+import { ACTION_SHORTCUT_NAME } from "./constants";
 
 export enum ContextMenus {
   PLAY_PAUSE = "PLAY_PAUSE",
@@ -438,7 +439,7 @@ export const getDefaultShortcut = async () => {
       const shortcut =
         commands.find(
           // (command) => command.name === "_execute_bowser_action"
-          (command) => command.name === "_execute_action"
+          (command) => command.name === ACTION_SHORTCUT_NAME
         )?.shortcut || "";
       resolve(shortcut);
     });

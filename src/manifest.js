@@ -38,12 +38,21 @@ module.exports = {
     extension_pages: "script-src 'self'; object-src 'self'",
   },
   commands: {
-    _execute_action: {
+    // Doesn't work anymore with manifest v3, dont know why
+    // _execute_action: {
+    //   suggested_key: {
+    //     default: "Alt+Shift+Q",
+    //     windows: "Alt+Shift+Q",
+    //     mac: "Alt+Shift+Q",
+    //   },
+    // },
+    "handle-qjs-action": {
       suggested_key: {
         default: "Alt+Shift+Q",
         windows: "Alt+Shift+Q",
         mac: "Alt+Shift+Q",
       },
+      description: "Enable / disable JavaScript",
     },
   },
 };
