@@ -12,6 +12,7 @@ import {
   handleClearStorage,
   handleClearSubdomain,
   handleOpenChromeSettings,
+  handleOpenLinkWithJSDisabled,
   handleOpenPopup,
   handleOpenShortcut,
   handlePause,
@@ -58,6 +59,7 @@ export enum ContextMenus {
   SUPPORT = "SUPPORT",
   SHORTCUT = "SHORTCUT",
   DANGER_ZONE = "DANGER_ZONE",
+  OPEN_LINK_WITH_JS_DISABLED = "OPEN_LINK_WITH_JS_DISABLED",
 }
 
 const CONTEXTS: [
@@ -87,6 +89,8 @@ const titles = {
   [ContextMenus.SUPPORT]: "☕ Buy me a hot drink",
   [ContextMenus.SHORTCUT]: "Shortcut",
   [ContextMenus.DANGER_ZONE]: "Danger zone",
+  [ContextMenus.OPEN_LINK_WITH_JS_DISABLED]:
+    "Open link with JavaScript disabled",
 };
 
 const dynamicTitles: { [key: string]: { [key: string]: string } } = {
@@ -268,6 +272,13 @@ export const createContextMenus = () => {
     title: titles[ContextMenus.SUPPORT],
     type: "normal",
     contexts: CONTEXTS,
+  });
+
+  chrome.contextMenus.create({
+    id: ContextMenus.OPEN_LINK_WITH_JS_DISABLED,
+    title: titles[ContextMenus.OPEN_LINK_WITH_JS_DISABLED],
+    type: "normal",
+    contexts: ["link"],
   });
 
   // state.contextMenus.separator = chrome.contextMenus.create({
@@ -489,6 +500,10 @@ export const handleContextMenu = (
       break;
     case ContextMenus.CHROME_SETTINGS:
       handleOpenChromeSettings();
+      break;
+    case ContextMenus.OPEN_LINK_WITH_JS_DISABLED:
+      handleOpenLinkWithJSDisabled(tab, info);
+
       break;
     // case ContextMenus.ALLOW_URL:
     //   handleAllowUrl(tab);

@@ -50,7 +50,9 @@ export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
 
   if (await isPausedTab(tab)) {
     await handlePlay(tab);
+    console.log("OUAOUOAHA11");
   } else {
+    console.log("OUAOUOAHA");
     const { subdomain, scheme } = await getUrlAsObject(tab.url!);
     const setting = await getTabSetting(tab);
     cl(`setting for ${tab.url} : ${setting}`, Log.ACTIONS);
@@ -69,9 +71,17 @@ export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
         await handleAllowUrl(tab);
       } else {
         if (subdomain.length) {
-          await handleClearSubdomain(tab);
+          if (tab.incognito === true) {
+            await handleAllowSubdomain(tab);
+          } else {
+            await handleClearSubdomain(tab);
+          }
         } else {
-          await handleClearDomain(tab);
+          if (tab.incognito === true) {
+            await handleAllowDomain(tab);
+          } else {
+            await handleClearDomain(tab);
+          }
         }
       }
     }
@@ -162,6 +172,27 @@ export const handleOpenChromeSettings = () => {
     active: true,
     url: "chrome://settings/content/javascript",
   });
+};
+export const handleOpenLinkWithJSDisabled = async (
+  tab: chrome.tabs.Tab,
+  info: chrome.contextMenus.OnClickData
+) => {
+  console.log(info, "HEYYEY");
+  const url = info.linkUrl;
+  const primaryPattern = getDomainPatternFromUrl(url!);
+  if (primaryPattern) {
+    console.info("block opened link: " + primaryPattern);
+    await setJavascriptRule({
+      primaryPattern,
+      scope: getScopeSetting(tab.incognito),
+      setting: "block",
+    });
+    chrome.tabs.create({
+      active: true,
+      url: info.linkUrl,
+      // openerTabId: tab.id, // not useful?
+    });
+  }
 };
 
 export const reloadTab = (tab: chrome.tabs.Tab) => {

@@ -13,9 +13,9 @@ export enum Log {
 
 export const cl = (message: any, type?: Log, name?: string) => {
   const DEBUG = {
-    [Log.ACTIONS]: false,
+    [Log.ACTIONS]: true,
     [Log.TABS]: false,
-    [Log.RULES]: false,
+    [Log.RULES]: true,
     [Log.STORAGE]: false,
     [Log.EVENTS]: false,
     [Log.ICON]: false,

@@ -13,10 +13,11 @@ import { getUrlAsObject, isValidScheme } from "./utils";
 export type RuleSetting = "allow" | "block";
 
 export const getTabSetting = async (tab: chrome.tabs.Tab) => {
-  return getJavascriptRuleSetting({
+  const setting = await getJavascriptRuleSetting({
     primaryUrl: tab.url!,
     incognito: tab.incognito,
   });
+  return setting;
 };
 
 export const getJavascriptRuleSetting = async ({
@@ -33,7 +34,8 @@ export const getJavascriptRuleSetting = async ({
         incognito,
       },
       (details) => {
-        return resolve(details.setting);
+        cl(details, Log.RULES);
+        resolve(details.setting);
       }
     );
   });
