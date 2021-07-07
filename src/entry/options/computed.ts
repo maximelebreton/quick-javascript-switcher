@@ -43,9 +43,9 @@ export const getPrimaryPattern = computed(() => {
     (state.input.scheme ? `${state.input.scheme}` : "*") + schemeSuffix.value;
   //const subdomain = state.input.subdomain ? `${state.input.subdomain}` : "*";
   const host = state.input.host ? `${state.input.host}` : "";
-  const path = "/" + (state.input.path ? `${state.input.path}` : "*");
+  // const path = "/" + (state.input.path ? `${state.input.path}` : "*");
 
-  return `${scheme}${host}${path}`;
+  return `${scheme}${host}${inputPath.value}`;
 });
 
 export const isValidHostname = (hostname: string) => {
@@ -90,6 +90,10 @@ export const modelInputScheme = toVModel("input.scheme");
 export const modelInputHost = toVModel("input.host");
 
 export const modelInputPath = toVModel("input.path");
+
+export const inputPath = computed(() => {
+  return state.input.scheme === "file" ? "" : "/*";
+});
 
 export const exportedRules = computed(() => {
   return JSON.stringify(state.rules, null, 2);

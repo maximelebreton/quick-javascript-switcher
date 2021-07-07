@@ -107,27 +107,26 @@
                   required
                 />
               </div>
-              <div class="form-group ml-2 mr-2">
+              <!-- <div class="form-group ml-2 mr-2">
                 <label for="">&nbsp;</label>
-                <div class="form-control-plaintext">/</div>
-              </div>
-              <div class="form-group mr-2">
+                <div class="form-control-plaintext">{{inputPath}}</div>
+              </div> -->
+              <div class="form-group ml-2 mr-2">
                 <label for=""
                   >Path
                   <span class="badge badge-info" @click="showHelp('path')"
                     >?</span
                   ></label
                 >
-                <input
-                  v-model="modelInputPath"
+                <div class="form-control-plaintext">{{inputPath}}</div>
+                <!-- <input
                   type="text"
                   class="form-control"
                   id=""
-                  placeholder="*"
+                  :placeholder="inputPath"
                   size="1"
-                  value="*"
                   disabled
-                />
+                /> -->
               </div>
 
               <div class="form-group">
@@ -256,13 +255,13 @@
         <h6>Help</h6>
         <ul class="list-unstyled">
           <li class="">
-            <a href="https://developer.chrome.com/extensions/match_patterns"
+            <a href="https://developer.chrome.com/extensions/match_patterns" target="_blank"
               >Match Patterns</a
             >
           </li>
           <li class="">
             <a
-              href="https://developer.chrome.com/extensions/contentSettings#pattern-precedence"
+              href="https://developer.chrome.com/extensions/contentSettings#pattern-precedence" target="_blank"
               >Pattern precedence</a
             >
           </li>
