@@ -7,6 +7,7 @@ import {
   setJavascriptRule,
 } from "./contentsettings";
 import { updateContextMenus } from "./contextmenus";
+import { askForTabsPermission } from "./events";
 import { updateIcon } from "./icon";
 import { getState, isPausedTab, isPausedTabs, updateState } from "./state";
 import { clearStorageRules } from "./storage";
@@ -23,6 +24,7 @@ import {
 
 export const handleIconClick = async (tab: chrome.tabs.Tab) => {
   //handlePlayPause(tab);
+
   await toggleJavaScript(tab);
 };
 

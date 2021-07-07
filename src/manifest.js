@@ -7,12 +7,13 @@ module.exports = {
   homepage_url: "https://github.com/maximelebreton/quick-javascript-switcher",
   permissions: [
     "contextMenus",
-    "activeTab",
+    // "activeTab",
+    "tabs",
     "contentSettings",
     "storage",
     "debugger",
   ],
-  optional_permissions: ["tabs"],
+  // optional_permissions: ["tabs"],
   incognito: "spanning",
   background: {
     service_worker: "service-worker.js",

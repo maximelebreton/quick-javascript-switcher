@@ -115,3 +115,31 @@ export const initEvents = () => {
     }
   });
 };
+
+export const askForTabsPermission = () => {
+  chrome.permissions.contains(
+    {
+      permissions: ["tabs"],
+    },
+    function (result) {
+      if (result) {
+        // The extension has the permissions.
+        console.log("Already have tabs permission!", result);
+      } else {
+        chrome.permissions.request(
+          {
+            permissions: ["tabs"],
+          },
+          function (granted) {
+            // The callback argument will be true if the user granted the permissions.
+            if (granted) {
+              console.log("Permission granted!", granted);
+            } else {
+              console.log("Permission declined...", granted);
+            }
+          }
+        );
+      }
+    }
+  );
+};
