@@ -3,6 +3,8 @@ node_modules
 /dist
 .build
 .builds
+.build.crx
+quick-javascript-switcher.pem
 
 # local env files
 .env.local

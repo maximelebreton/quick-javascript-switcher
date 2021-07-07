@@ -1,5 +1,6 @@
 import { handleIconClick, reloadTab } from "./actions";
 import { ACTION_SHORTCUT_NAME } from "./constants";
+import { rebaseJavascriptSettingsFromStorage } from "./contentsettings";
 import { handleContextMenu, updateContextMenus } from "./contextmenus";
 import { updateIcon } from "./icon";
 
@@ -81,6 +82,36 @@ export const initEvents = () => {
       if (tab) {
         await handleIconClick(tab);
       }
+    }
+  });
+
+  chrome.storage.onChanged.addListener(async (changes, areaName) => {
+    if (changes.rules) {
+      console.log(changes, "rules changes");
+      console.log(areaName, "areaname");
+      const { newValue, oldValue } = changes;
+
+      if (newValue !== oldValue) {
+        await rebaseJavascriptSettingsFromStorage();
+      }
+    }
+  });
+
+  //@ts-ignore
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.popupOpen === true) {
+      console.log("it's working !");
+    }
+    if (message.popupOpen === false) {
+      console.log("Popup closed");
+    }
+  });
+
+  chrome.runtime.onConnect.addListener(function (port) {
+    if (port.name === "popup") {
+      port.onDisconnect.addListener(function () {
+        console.log("popup has been closed");
+      });
     }
   });
 };

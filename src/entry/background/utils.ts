@@ -76,6 +76,9 @@ export const getSubdomainPatternFromUrl = (url: string) => {
     return null;
   }
   const { domain, subdomain, schemeSuffix } = getUrlAsObject(url);
+  if (subdomain === null) {
+    return null;
+  }
   const pattern = `*${schemeSuffix}${subdomain}${domain}/*`;
 
   return pattern;
@@ -85,6 +88,9 @@ export const getDomainPatternFromUrl = (url: string) => {
     return null;
   }
   const { domain, schemeSuffix } = getUrlAsObject(url);
+  if (domain === null) {
+    return null;
+  }
   const pattern = `*${schemeSuffix}*.${domain}/*`;
   return pattern;
 };
@@ -99,8 +105,8 @@ export const getUrlPatternFromUrl = (url: string) => {
   } = getUrlAsObject(url);
 
   console.log(pathnameUntilLastSlash, " pathnameUntilLastSlash");
-  const pattern = `${scheme}${schemeSuffix}${hostname}${pathnameUntilLastSlash}/*`;
-  return pattern;
+  // const pattern = `${scheme}${schemeSuffix}${hostname}${pathnameUntilLastSlash}/*`;
+  return url;
 };
 
 export const getScopeSetting = (incognito: chrome.tabs.Tab["incognito"]) => {

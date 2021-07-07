@@ -49,20 +49,28 @@ export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
   if (await isPausedTab(tab)) {
     await handlePlay(tab);
   } else {
-    const { subdomain } = await getUrlAsObject(tab.url!);
+    const { subdomain, scheme } = await getUrlAsObject(tab.url!);
     const setting = await getTabSetting(tab);
     cl(`setting for ${tab.url} : ${setting}`, Log.ACTIONS);
     if (setting === "allow") {
-      if (subdomain.length) {
-        await handleBlockSubdomain(tab);
+      if (scheme === "file") {
+        await handleBlockUrl(tab);
       } else {
-        await handleBlockDomain(tab);
+        if (subdomain.length) {
+          await handleBlockSubdomain(tab);
+        } else {
+          await handleBlockDomain(tab);
+        }
       }
     } else {
-      if (subdomain.length) {
-        await handleClearSubdomain(tab);
+      if (scheme === "file") {
+        await handleAllowUrl(tab);
       } else {
-        await handleClearDomain(tab);
+        if (subdomain.length) {
+          await handleClearSubdomain(tab);
+        } else {
+          await handleClearDomain(tab);
+        }
       }
     }
   }
