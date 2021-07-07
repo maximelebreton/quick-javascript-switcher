@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="form-check container py-3">
-      <input
+      <!-- <input
         class="form-check-input"
         type="checkbox"
         value=""
@@ -9,7 +9,7 @@
       />
       <label class="form-check-label" for="defaultCheck1">
         Keep rules synced accross computers
-      </label>
+      </label> -->
     </div>
 
     <div class="border mb-5">
