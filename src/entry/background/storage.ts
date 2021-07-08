@@ -18,17 +18,19 @@ export namespace QJS {
 }
 
 export const getStorageMethod = async () => {
-  return new Promise<any>((resolve, reject) => {
-    chrome.storage.local.get(["state"], (value) => {
-      const state: State = value["state"] ? JSON.parse(value["state"]) : {};
+  return new Promise<typeof chrome.storage.sync | typeof chrome.storage.local>(
+    (resolve, reject) => {
+      chrome.storage.local.get(["state"], (value) => {
+        const state: State = value["state"] ? JSON.parse(value["state"]) : {};
 
-      if (state && state.options && state.options.useSync === true) {
-        resolve(chrome.storage.sync);
-      } else {
-        resolve(chrome.storage.local);
-      }
-    });
-  });
+        if (state && state.options && state.options.useSync === true) {
+          resolve(chrome.storage.sync);
+        } else {
+          resolve(chrome.storage.local);
+        }
+      });
+    }
+  );
 
   // if (state.options.useSync === true) {
   //   return chrome.storage.sync;
@@ -99,6 +101,16 @@ export const setStorage = async (name: string, value: any) => {
   return new Promise<void>((resolve, reject) => {
     storageMethod.set({ [name]: JSON.stringify(value) }, () => {
       resolve();
+    });
+  });
+};
+
+export const getAllStorage = async () => {
+  const storageMethod = await getStorageMethod();
+  return new Promise((resolve, reject) => {
+    //@ts-ignore
+    storageMethod.get(null, (items: QJS.Storage) => {
+      resolve(items);
     });
   });
 };
