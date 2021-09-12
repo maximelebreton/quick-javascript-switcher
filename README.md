@@ -26,7 +26,7 @@ That's all !
 
 ## Install as unpacked extension
 
-[Download the .zip extension][zip-extension], go to the Extensions page ([chrome://extensions][chrome-extensions]), open the Developer mode, and click on "Load unpacked extension".  
+[Download the .zip extension][zip-extension], go to the Extensions page (<chrome://extensions>), open the Developer mode, and click on "Load unpacked extension".  
 Find the extension folder, and press *ok*.
 
 [crx-extension]:https://raw.githubusercontent.com/maximelebreton/quick-javascript-switcher/master/build.crx
