@@ -9,7 +9,7 @@ import {
 import { updateContextMenus } from "./contextmenus";
 import { askForTabsPermission } from "./events";
 import { updateIcon } from "./icon";
-import { getState, isPausedTab, isPausedTabs, updateState } from "./state";
+import { getState, isPausedTab, isPausedTabs, setTabsState } from "./state";
 import { clearStorageRules } from "./storage";
 import { getActiveTab } from "./tabs";
 import { cl, Log } from "./utils";
@@ -132,7 +132,7 @@ export const handleOpenPopup = async (tab: chrome.tabs.Tab) => {
   const width = 320;
   const height = 532;
   const top = 67;
-  const state = await getState();
+  const state = getState.value;
   chrome.windows.create(
     {
       left: width,
@@ -221,9 +221,7 @@ export const handlePlay = async (tab: chrome.tabs.Tab) => {
   setScriptExecutionDisabled(false, tab, async () => {
     if (tab.id) {
       // state.tabs[tab.id] = { id: tab.id, paused: false };
-      await updateState({
-        tabs: { [tab.id]: { id: tab.id, paused: false } },
-      });
+      await setTabsState({ [tab.id]: { id: tab.id, paused: false } });
     }
     handleDetach(tab);
     await updateContextMenus();
@@ -242,9 +240,7 @@ export const handlePlay = async (tab: chrome.tabs.Tab) => {
 export const handleDetach = async (tab: chrome.tabs.Tab) => {
   if (tab.id) {
     // delete state.tabs[tab.id];
-    await updateState({
-      tabs: { [tab.id]: undefined },
-    });
+    await setTabsState({ [tab.id]: undefined });
   }
   await updateContextMenus();
   await updateIcon(tab);
@@ -261,9 +257,7 @@ export const handlePause = async (tab: chrome.tabs.Tab) => {
     setScriptExecutionDisabled(true, tab, async () => {
       if (tab.id) {
         // state.tabs[tab.id] = { id: tab.id, paused: true };
-        await updateState({
-          tabs: { [tab.id]: { id: tab.id, paused: true } },
-        });
+        await setTabsState({ [tab.id]: { id: tab.id, paused: true } });
       }
       await updateIcon(tab);
       await updateContextMenus();

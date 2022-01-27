@@ -1,7 +1,14 @@
-import { reactive, toRefs, readonly } from "vue";
-import { QJS } from "../background/storage";
+import { reactive, toRefs, readonly, computed } from "vue";
+import { getStorage, QJS, setStorage } from "../background/storage";
+import { Options } from "../background/_types";
+import { getUseSyncFromStorage } from "../background/storage";
 
 export const state = reactive({
+  options: {
+    // "showContextMenu": true;
+    // "autoRefresh": true;
+    useSync: true,
+  },
   input: {
     scheme: "*",
     subdomain: "",
@@ -69,5 +76,45 @@ export const state = reactive({
   //   },
   // ],
 });
+
+export const getOptions = computed(() => state.options);
+
+export const getUseSyncState = computed(() => state.options.useSync);
+
+export const setUseSyncState = (useSync: boolean) => {
+  state.options.useSync = useSync;
+  console.log("state new value: ", state);
+};
+
+// export const useSyncModel = computed({
+//   get() {
+//     console.log("useSyncModel get " + getUseSyncState.value);
+//     return getUseSyncState.value;
+//   },
+//   set(value: any) {
+//     console.log("useSyncModel set ", value);
+//     setUseSyncState(value);
+//   },
+// });
+
+export const getOptionsFromStorage = async () => {
+  return (await getStorage("options")) as Options;
+};
+
+export const syncOptionsToStorage = async (newOptions: Partial<Options>) => {
+  const currentOptions = getOptions.value;
+  const mergedOptions = { ...currentOptions, ...newOptions };
+  console.log("merged options", mergedOptions);
+  await setStorage("options", mergedOptions);
+};
+
+export const initState = async () => {
+  const optionsStorage = await getUseSyncFromStorage();
+  console.log(optionsStorage, "init'state");
+
+  if (optionsStorage !== undefined) {
+    state.options.useSync = optionsStorage;
+  }
+};
 
 export const useState = () => toRefs(state);

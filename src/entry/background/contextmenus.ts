@@ -1,4 +1,4 @@
-import { isPausedTab, updateState } from "./state";
+import { isPausedTab } from "./state";
 import { getActiveTab } from "./tabs";
 import {
   handleAllowDomain,
@@ -60,12 +60,23 @@ export enum ContextMenus {
   SHORTCUT = "SHORTCUT",
   DANGER_ZONE = "DANGER_ZONE",
   OPEN_LINK_WITH_JS_DISABLED = "OPEN_LINK_WITH_JS_DISABLED",
+  RIGHT_CLICK_MENU = "RIGHT_CLICK_MENU",
 }
 
-const CONTEXTS: [
+const DEFAULT_CONTEXT: [
   chrome.contextMenus.ContextType,
   ...chrome.contextMenus.ContextType[]
-] = ["action"];
+] = ["action", "audio", "frame", "image", "page", "video"];
+
+const MORE_CONTEXT: [
+  chrome.contextMenus.ContextType,
+  ...chrome.contextMenus.ContextType[]
+] = DEFAULT_CONTEXT;
+
+const SETTINGS_CONTEXT: [
+  chrome.contextMenus.ContextType,
+  ...chrome.contextMenus.ContextType[]
+] = DEFAULT_CONTEXT;
 
 const titles = {
   [ContextMenus.PLAY_PAUSE]: "Pause JavaScript",
@@ -91,6 +102,7 @@ const titles = {
   [ContextMenus.DANGER_ZONE]: "Danger zone",
   [ContextMenus.OPEN_LINK_WITH_JS_DISABLED]:
     "Open link with JavaScript disabled",
+  [ContextMenus.RIGHT_CLICK_MENU]: "Quick Javascript Switcher",
 };
 
 const dynamicTitles: { [key: string]: { [key: string]: string } } = {
@@ -117,10 +129,15 @@ export const addContextMenu = ({
   id,
   parentId,
   dynamicTitle,
+  contexts = DEFAULT_CONTEXT,
 }: {
   id: ContextMenus;
   parentId?: ContextMenus;
   dynamicTitle?: boolean;
+  contexts?: [
+    chrome.contextMenus.ContextType,
+    ...chrome.contextMenus.ContextType[]
+  ];
 }) => {
   // await updateState({
   //   contextMenus: {
@@ -131,7 +148,7 @@ export const addContextMenu = ({
     id: id,
     title: dynamicTitle ? dynamicTitles[id].allow : titles[id],
     type: "normal",
-    contexts: CONTEXTS,
+    contexts,
     parentId,
   });
 };
@@ -150,6 +167,7 @@ export const createContextMenus = () => {
   addContextMenu({
     id: ContextMenus.SUBDOMAIN,
   });
+
   addContextMenu({
     id: ContextMenus.DOMAIN,
   });
@@ -207,19 +225,20 @@ export const createContextMenus = () => {
   chrome.contextMenus.create({
     id: "separator-1",
     type: "separator",
-    contexts: CONTEXTS,
+    contexts: MORE_CONTEXT,
   });
 
   chrome.contextMenus.create({
     id: ContextMenus.MORE,
     title: titles[ContextMenus.MORE],
     type: "normal",
-    contexts: CONTEXTS,
+    contexts: MORE_CONTEXT,
   });
 
   addContextMenu({
     id: ContextMenus.SHORTCUT,
     parentId: ContextMenus.MORE,
+    contexts: MORE_CONTEXT,
   });
 
   // await updateState({
@@ -232,18 +251,20 @@ export const createContextMenus = () => {
     id: ContextMenus.CHROME_SETTINGS,
     title: titles[ContextMenus.CHROME_SETTINGS],
     type: "normal",
-    contexts: CONTEXTS,
+    contexts: SETTINGS_CONTEXT,
     parentId: ContextMenus.MORE,
   });
 
   addContextMenu({
     id: ContextMenus.DANGER_ZONE,
     parentId: ContextMenus.MORE,
+    contexts: SETTINGS_CONTEXT,
   });
 
   addContextMenu({
     id: ContextMenus.CLEAR_CONTENT_SETTINGS,
     parentId: ContextMenus.DANGER_ZONE,
+    contexts: SETTINGS_CONTEXT,
   });
 
   // state.contextMenus[ContextMenus.CLEAR_STORAGE] = chrome.contextMenus.create({
@@ -271,7 +292,7 @@ export const createContextMenus = () => {
     id: ContextMenus.SUPPORT,
     title: titles[ContextMenus.SUPPORT],
     type: "normal",
-    contexts: CONTEXTS,
+    contexts: SETTINGS_CONTEXT,
   });
 
   chrome.contextMenus.create({

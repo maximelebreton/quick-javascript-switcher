@@ -91,6 +91,8 @@ export const modelInputHost = toVModel("input.host");
 
 export const modelInputPath = toVModel("input.path");
 
+export const modelOptionsUseSync = toVModel("options.useSync");
+
 export const inputPath = computed(() => {
   return state.input.scheme === "file" ? "" : "/*";
 });

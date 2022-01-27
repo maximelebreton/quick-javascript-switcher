@@ -83,6 +83,7 @@ export const setJavascriptRule = ({
 export const addJavascriptRule = async (rule: QJS.ContentSettingRule) => {
   cl(rule, Log.RULES);
   return new Promise<void>((resolve, reject) => {
+    console.log(chrome.contentSettings, "chrome.contentSettings");
     chrome.contentSettings.javascript.set(rule, async () => {
       console.info(
         `${rule.setting} ${rule.primaryPattern} rule added to content settings`

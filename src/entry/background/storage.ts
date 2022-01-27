@@ -2,7 +2,9 @@ import { merge } from "lodash";
 import { RuleSetting } from "./contentsettings";
 import { getState, State } from "./state";
 import { cl, Log } from "./utils";
+import { Options } from "./_types";
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace QJS {
   export type ContentSettingRule = {
     [key: string]: string;
@@ -14,21 +16,54 @@ export namespace QJS {
   export type Storage = {
     rules: string;
     state: string;
+    options: string;
   };
 }
 
+export const getUseSyncFromStorage = () => {
+  return new Promise<Options["useSync"]>(async (resolve, reject) => {
+    chrome.storage.local.get(["useSync"], (value: any) => {
+      let result;
+
+      result = value["useSync"] ? JSON.parse(value["useSync"]) : true;
+
+      console.log("VALUE", result);
+      resolve(result);
+    });
+  });
+};
+
+export const setUseSyncToStorage = (value: boolean) => {
+  chrome.storage.local.set({ ["useSync"]: JSON.stringify(value) }, () => {
+    console.log("useSync set to: " + value);
+  });
+};
+
 export const getStorageMethod = async () => {
   return new Promise<typeof chrome.storage.sync | typeof chrome.storage.local>(
-    (resolve, reject) => {
-      chrome.storage.local.get(["state"], (value) => {
-        const state: State = value["state"] ? JSON.parse(value["state"]) : {};
+    async (resolve, reject) => {
+      // chrome.storage.local.get(["options"], (value) => {
+      //   console.log(value);
+      //   const options: Options = value["options"]
+      //     ? JSON.parse(value["options"])
+      //     : {};
 
-        if (state && state.options && state.options.useSync === true) {
-          resolve(chrome.storage.sync);
-        } else {
-          resolve(chrome.storage.local);
-        }
-      });
+      //   if (options && options.useSync === true) {
+      //     console.info("Chrome storage method: Sync");
+      //     resolve(chrome.storage.sync);
+      //   } else {
+      //     console.info("Chrome storage method: Local");
+      //     resolve(chrome.storage.local);
+      //   }
+      // });
+      const useSync = await getUseSyncFromStorage();
+      if (useSync === true) {
+        console.info("Chrome storage method: Sync");
+        resolve(chrome.storage.sync);
+      } else {
+        console.info("Chrome storage method: Local");
+        resolve(chrome.storage.local);
+      }
     }
   );
 
@@ -65,6 +100,13 @@ export const getStorageRules = async () => {
   });
 };
 
+export const getStorageOptions = async () => {
+  return new Promise<Options>(async (resolve, reject) => {
+    const options = ((await getStorage("options")) as Options) || {};
+    resolve(options);
+  });
+};
+
 export const clearStorageRules = async () => {
   const storageMethod = await getStorageMethod();
   storageMethod.clear(() => {
@@ -94,6 +136,16 @@ export const setStorageRules = async (rule: QJS.ContentSettingRule) => {
       `${rule.setting} ${rule.primaryPattern} rule added to storage`
     );
   }
+};
+
+export const setStorageOptions = async (
+  key: keyof Options,
+  value: Options[keyof Options]
+) => {
+  const existingOptions = await getStorageOptions();
+  existingOptions[key] = value;
+  await setStorage("options", existingOptions);
+  console.info(`${key} option is now set to ${value} in storage`);
 };
 
 export const setStorage = async (name: string, value: any) => {

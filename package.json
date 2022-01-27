@@ -1,6 +1,6 @@
 {
   "name": "qjs",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0-beta.5",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -16,7 +16,7 @@
     "deepmerge": "^4.2.2",
     "lodash": "^4.17.21",
     "tldts": "^5.7.38",
-    "vue": "^3.0.0"
+    "vue": "^3.2.21"
   },
   "devDependencies": {
     "@types/chrome": "0.0.75",

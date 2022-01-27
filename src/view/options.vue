@@ -1,14 +1,18 @@
 <template>
   <div>
     <div class="form-check container py-3">
+      
+      <label for="useLocal"><input type="radio" id="useLocal" :value="false" v-model="modelOptionsUseSync"> Local</label>
+      
+      <label for="useSync"><input type="radio" id="useSync" :value="true" v-model="modelOptionsUseSync"> Sync</label>
       <!-- <input
         class="form-check-input"
         type="checkbox"
-        value=""
-        id="defaultCheck1"
+        v-model="modelOptionsUseSync"
+        id="options__useSync"
       />
-      <label class="form-check-label" for="defaultCheck1">
-        Keep rules synced accross computers
+      <label class="form-check-label" for="options__useSync">
+       {{modelOptionsUseSync === true ? "" : ""}}
       </label> -->
     </div>
 
@@ -118,7 +122,7 @@
                     >?</span
                   ></label
                 >
-                <div class="form-control-plaintext">{{inputPath}}</div>
+                <div class="form-control-plaintext">{{ inputPath }}</div>
                 <!-- <input
                   type="text"
                   class="form-control"
@@ -200,7 +204,7 @@
 
               <ul class="list-group list-grou-flush">
                 <li
-                  :key="'list-'+index"
+                  :key="'list-' + index"
                   class="list-group-item d-flex align-items-center"
                   :class="{
                     'list-group-item-warning':
@@ -255,13 +259,16 @@
         <h6>Help</h6>
         <ul class="list-unstyled">
           <li class="">
-            <a href="https://developer.chrome.com/extensions/match_patterns" target="_blank"
+            <a
+              href="https://developer.chrome.com/extensions/match_patterns"
+              target="_blank"
               >Match Patterns</a
             >
           </li>
           <li class="">
             <a
-              href="https://developer.chrome.com/extensions/contentSettings#pattern-precedence" target="_blank"
+              href="https://developer.chrome.com/extensions/contentSettings#pattern-precedence"
+              target="_blank"
               >Pattern precedence</a
             >
           </li>
@@ -282,28 +289,54 @@
 </template>
 
 <script lang="ts">
+import { getOptions, syncOptionsToStorage, getUseSyncState, initState } from "@/entry/options/state";
+import { setUseSyncToStorage } from "@/entry/background/storage";
+import { rebaseJavascriptSettingsFromStorage } from "@/entry/background/contentsettings";
+import {  checkExistingRules } from "@/entry/options/methods";
 import { defineComponent, onMounted } from "vue";
 import {
   useState,
   useComputed,
   useMethods,
-  initWatchers,
 } from "../entry/options";
 export default defineComponent({
   name: "App",
   components: {},
+  watch: {
+      // whenever question changes, this function will run
+    getInputRule(rule, oldRule) {
+      console.log("input rule")
+      checkExistingRules(rule)
+    },
+    userRules(rules, oldRules) {
+      const {getInputRule} = useComputed()
+      checkExistingRules(getInputRule.value)
+    },
+    async modelOptionsUseSync(value, oldValue) {
+        console.log("options watch", value)
+        setUseSyncToStorage(value)
+
+        await rebaseJavascriptSettingsFromStorage();
+    }
+ ,   
+  },
   setup() {
     const { fetchRules } = useMethods();
-
-    initWatchers();
+    initState()
 
     onMounted(async () => {
+
       await fetchRules();
 
       chrome.storage.onChanged.addListener(async () => {
         await fetchRules();
       });
+
+
     });
+    
+    
+
 
     return {
       ...useState(),
