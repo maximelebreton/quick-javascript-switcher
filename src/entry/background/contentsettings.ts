@@ -5,8 +5,8 @@ import { updateIcon } from "./icon";
 import {
   getStorageRules,
   QJS,
-  setStorageRules,
-  unsetStorageRules,
+  setStorageRule,
+  unsetStorageRule,
 } from "./storage";
 import { getUrlAsObject, isValidScheme } from "./utils";
 
@@ -92,7 +92,7 @@ export const addJavascriptRule = async (rule: QJS.ContentSettingRule) => {
       if (chrome.runtime.lastError) {
         console.error(chrome.runtime.lastError.message);
       } else {
-        await setStorageRules(rule);
+        await setStorageRule(rule);
       }
       resolve();
     });
@@ -128,7 +128,7 @@ export const removeJavascriptRule = async (
       Object.entries(storageRules).forEach(([key, storageRule]) => {
         chrome.contentSettings.javascript.set(storageRule, async () => {});
       });
-      await unsetStorageRules(rule);
+      await unsetStorageRule(rule);
     }
     resolve();
   });

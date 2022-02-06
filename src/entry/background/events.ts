@@ -4,9 +4,15 @@ import { rebaseJavascriptSettingsFromStorage } from "./contentsettings";
 import { handleContextMenu, updateContextMenus } from "./contextmenus";
 import { updateIcon } from "./icon";
 
-import { getStorageRules } from "./storage";
+import {
+  convertOldRulesToNew,
+  getStorageRules,
+  QJS,
+  setStorage,
+} from "./storage";
 import { getActiveTab } from "./tabs";
 import { cl, Log } from "./utils";
+import satisfies from "semver/functions/satisfies";
 
 // export const handleUpdates = async () => {
 //   await updateContextMenus();
@@ -56,10 +62,36 @@ export const initEvents = () => {
 
   // chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {});
 
-  chrome.runtime.onInstalled.addListener(async () => {
+  const handleUpdateFromV1toV2 = async () => {
+    const currentRules = await getStorageRules();
+    if (Array.isArray(currentRules)) {
+      const convertedRules = convertOldRulesToNew(currentRules);
+      await setStorage("rules", convertedRules);
+    }
+  };
+
+  chrome.runtime.onInstalled.addListener(async (details) => {
     await updateContextMenus();
     const tab = await getActiveTab();
     await updateIcon(tab);
+
+    // Check whether new version is installed
+    if (details.reason == "install") {
+      //console.log("First install!");
+    } else if (details.reason == "update") {
+      const currentVersion = chrome.runtime.getManifest().version;
+      const isFromV1ToV2 =
+        details.previousVersion &&
+        satisfies(details.previousVersion, "<2.0.0") &&
+        satisfies(currentVersion, ">=2.0.0");
+
+      if (isFromV1ToV2) {
+        console.log(
+          `Updated from ${details.previousVersion} to ${currentVersion}, trying to convert existing rules.`
+        );
+        await handleUpdateFromV1toV2();
+      }
+    }
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {

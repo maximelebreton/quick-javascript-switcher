@@ -91,9 +91,7 @@ export const getStorage = async (name: keyof QJS.Storage) => {
 };
 
 export const getStorageRules = async () => {
-  return new Promise<{
-    [key: string]: QJS.ContentSettingRule;
-  }>(async (resolve, reject) => {
+  return new Promise<QJS.ContentSettingRules>(async (resolve, reject) => {
     const rules = (await getStorage("rules")) as QJS.ContentSettingRules;
     cl(rules, Log.RULES, "rules");
     resolve(rules);
@@ -114,7 +112,7 @@ export const clearStorageRules = async () => {
   });
 };
 
-export const unsetStorageRules = async (
+export const unsetStorageRule = async (
   rule: Omit<QJS.ContentSettingRule, "setting">
 ) => {
   return new Promise<void>(async (resolve, reject) => {
@@ -127,7 +125,7 @@ export const unsetStorageRules = async (
     resolve();
   });
 };
-export const setStorageRules = async (rule: QJS.ContentSettingRule) => {
+export const setStorageRule = async (rule: QJS.ContentSettingRule) => {
   if (rule.scope === "regular") {
     const existingRules = await getStorageRules();
     existingRules[rule.primaryPattern] = rule;
@@ -165,4 +163,14 @@ export const getAllStorage = async () => {
       resolve(items);
     });
   });
+};
+
+export const convertOldRulesToNew = (rules: Array<QJS.ContentSettingRule>) => {
+  const convertedRules: QJS.ContentSettingRules = {};
+  if (Array.isArray(rules)) {
+    rules.forEach((rule: QJS.ContentSettingRule) => {
+      convertedRules[rule.primaryPattern] = rule;
+    });
+    return convertedRules;
+  }
 };
