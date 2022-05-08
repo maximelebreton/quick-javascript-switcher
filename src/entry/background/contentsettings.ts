@@ -1,5 +1,4 @@
-import { isValidPrimaryPattern } from "../options/computed";
-import { clearJavascriptRules, handleClear, reloadTab } from "./actions";
+import { clearJavascriptRules, reloadTab } from "./actions";
 import { cl, isAllowedPattern, Log } from "./utils";
 import { updateIcon } from "./icon";
 import {
@@ -8,7 +7,7 @@ import {
   setStorageRule,
   unsetStorageRule,
 } from "./storage";
-import { getUrlAsObject, isValidScheme } from "./utils";
+import { getUrlAsObject } from "./utils";
 
 export type RuleSetting = "allow" | "block";
 
@@ -43,7 +42,10 @@ export const getJavascriptRuleSetting = async ({
 
 export const removePrimaryPatternFromRules = (primaryPattern: string) => {};
 
-export const setJavascriptRule = ({
+const reverseSetting = (setting: string) =>
+  setting === "allow" ? "block" : "allow";
+
+export const setJavascriptRule = async ({
   setting,
   primaryPattern,
   scope,
@@ -54,84 +56,75 @@ export const setJavascriptRule = ({
   scope: QJS.ContentSettingRule["scope"];
   tab?: chrome.tabs.Tab;
 }) => {
-  return new Promise<void>(async (resolve, reject) => {
-    const rule = {
-      primaryPattern,
-      setting,
-      scope,
-    };
+  const rule = {
+    primaryPattern,
+    setting,
+    scope,
+  };
 
-    // console.log(isAllowedPattern(primaryPattern), "IS ALLOWED?");
-    if (!isAllowedPattern(primaryPattern)) {
-      return;
-    }
+  // console.log(isAllowedPattern(primaryPattern), "IS ALLOWED?");
+  if (!isAllowedPattern(primaryPattern)) {
+    console.error("not allowed pattern", primaryPattern);
+    return;
+  }
 
-    // if (setting === "allow") {
-    //   await removeJavascriptRule(rule);
-    // } else {
-    //   await addJavascriptRule(rule);
-    // }
-    await addJavascriptRule(rule);
-    if (tab) {
-      await updateIcon(tab); //not needed because we update tab
-      reloadTab(tab);
-    }
-    resolve();
+  // Remove the old rule, if any
+  await removeJavascriptRule({
+    primaryPattern,
+    scope,
+    setting: reverseSetting(setting),
   });
+  // Check if default settings are what we want
+  if (!tab || (await getTabSetting(tab)) !== setting) {
+    await addJavascriptRule(rule);
+  }
+  if (tab) {
+    await updateIcon(tab); //not needed because we update tab
+    reloadTab(tab);
+  }
 };
 
 export const addJavascriptRule = async (rule: QJS.ContentSettingRule) => {
   cl(rule, Log.RULES);
-  return new Promise<void>((resolve, reject) => {
-    console.log(chrome.contentSettings, "chrome.contentSettings");
-    chrome.contentSettings.javascript.set(rule, async () => {
-      console.info(
-        `${rule.setting} ${rule.primaryPattern} rule added to content settings`
-      );
-
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError.message);
-      } else {
-        await setStorageRule(rule);
-      }
-      resolve();
-    });
-  });
+  console.log(chrome.contentSettings, "chrome.contentSettings");
+  try {
+    await chrome.contentSettings.javascript.set(rule);
+    await setStorageRule(rule);
+    console.info(
+      `${rule.setting} ${rule.primaryPattern} rule added to content settings`
+    );
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export const rebaseJavascriptSettingsFromStorage = async () => {
-  return new Promise<void>(async (resolve, reject) => {
-    const storageRules = await getStorageRules();
-    clearJavascriptRules();
-    Object.entries(storageRules).forEach(([key, storageRule]) => {
-      chrome.contentSettings.javascript.set(storageRule, async () => {});
-    });
-    console.info("Rebased settings from storage");
-    resolve();
+  const storageRules = await getStorageRules();
+  clearJavascriptRules();
+  Object.entries(storageRules).forEach(([key, storageRule]) => {
+    chrome.contentSettings.javascript.set(storageRule, async () => {});
   });
+  console.info("Rebased settings from storage");
 };
 
 export const removeJavascriptRule = async (
   rule: Omit<QJS.ContentSettingRule, "setting">
 ) => {
-  return new Promise<void>(async (resolve, reject) => {
-    const storageRules = await getStorageRules();
-    if (
-      storageRules &&
-      storageRules[rule.primaryPattern] &&
-      storageRules[rule.primaryPattern].scope === rule.scope
-    ) {
-      delete storageRules[rule.primaryPattern];
+  const storageRules = await getStorageRules();
+  if (
+    storageRules &&
+    storageRules[rule.primaryPattern] &&
+    storageRules[rule.primaryPattern].scope === rule.scope
+  ) {
+    delete storageRules[rule.primaryPattern];
 
-      clearJavascriptRules();
-      console.info(`${rule.primaryPattern} rule removed from content settings`);
-      Object.entries(storageRules).forEach(([key, storageRule]) => {
-        chrome.contentSettings.javascript.set(storageRule, async () => {});
-      });
-      await unsetStorageRule(rule);
-    }
-    resolve();
-  });
+    clearJavascriptRules();
+    console.info(`${rule.primaryPattern} rule removed from content settings`);
+    Object.entries(storageRules).forEach(([key, storageRule]) => {
+      chrome.contentSettings.javascript.set(storageRule, async () => {});
+    });
+    await unsetStorageRule(rule);
+  }
 };
 
 export const searchRulesForTab = async (tab: chrome.tabs.Tab) => {

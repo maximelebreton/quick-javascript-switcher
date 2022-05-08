@@ -1,13 +1,9 @@
 import {
-  getDomainSetting,
-  getJavascriptRuleSetting,
-  getSubdomainSetting,
   getTabSetting,
   removeJavascriptRule,
   setJavascriptRule,
 } from "./contentsettings";
 import { updateContextMenus } from "./contextmenus";
-import { askForTabsPermission } from "./events";
 import { updateIcon } from "./icon";
 import { getState, isPausedTab, isPausedTabs, setTabsState } from "./state";
 import { clearStorageRules } from "./storage";
@@ -50,9 +46,9 @@ export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
 
   if (await isPausedTab(tab)) {
     await handlePlay(tab);
-    console.log("OUAOUOAHA11");
+    console.log("pauseplay");
   } else {
-    console.log("OUAOUOAHA");
+    console.log("blockallow");
     const { subdomain, scheme } = await getUrlAsObject(tab.url!);
     const setting = await getTabSetting(tab);
     cl(`setting for ${tab.url} : ${setting}`, Log.ACTIONS);
@@ -71,36 +67,13 @@ export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
         await handleAllowUrl(tab);
       } else {
         if (subdomain.length) {
-          if (tab.incognito === true) {
-            await handleAllowSubdomain(tab);
-          } else {
-            await handleClearSubdomain(tab);
-          }
+          await handleAllowSubdomain(tab);
         } else {
-          if (tab.incognito === true) {
-            await handleAllowDomain(tab);
-          } else {
-            await handleClearDomain(tab);
-          }
+          await handleAllowDomain(tab);
         }
       }
     }
   }
-
-  // if (blockedSubdomainAndDomain) {
-  //   console.log("allow subdomain!");
-  //   handleAllowSubdomain(tab);
-  //   handleAllowDomain(tab);
-  // } else if (blockedSubdomainOnly) {
-  //   console.log("allow subdomain!");
-  //   handleAllowSubdomain(tab);
-  // } else if (blockedDomainOnly) {
-  //   console.log("block subdomain!");
-  //   handleBlockSubdomain(tab);
-  // } else {
-  //   console.log("block domain!");
-  //   handleBlockDomain(tab);
-  // }
 };
 
 export const handlePlayPause = async (tab: chrome.tabs.Tab) => {
