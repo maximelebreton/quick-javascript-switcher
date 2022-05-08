@@ -116,7 +116,7 @@ export const clearJavascriptRules = () => {
     console.info("QJS javascript rules cleared!");
     await updateContextMenus();
     const tab = await getActiveTab();
-    await updateIcon(tab);
+    if (tab) await updateIcon(tab);
   });
 };
 
