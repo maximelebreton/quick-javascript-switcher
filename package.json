@@ -2,12 +2,13 @@
   "name": "qjs",
   "version": "2.0.0-beta.6",
   "private": true,
+  "browsersList" : ["last 5 chrome versions"],
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --modern",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "build-watch": "vue-cli-service build-watch --mode development",
+    "build-watch": "vue-cli-service build-watch --modern --mode development",
     "zip": "bestzip quick-javascript-switcher.zip .build/*",
     "prettier": "prettier -w .",
     "deploy": "npm run build && npm run zip && npm run upload"
