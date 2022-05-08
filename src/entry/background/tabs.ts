@@ -15,28 +15,20 @@ export const getActiveTab = async () => {
 };
 
 export const handleGetActiveTab = async () => {
-  return new Promise<chrome.tabs.Tab>((resolve, reject) => {
-    chrome.tabs.query(
-      {
-        active: true,
-        currentWindow: true,
-        // 'windowId': chrome.windows.WINDOW_ID_CURRENT
-      },
-      async (tabs) => {
-        // FIX Chrome 91 bug or feature: https://stackoverflow.com/questions/67822816/tabs-cannot-be-queried-right-now-user-may-be-dragging-a-tab
-        if (chrome.runtime.lastError) {
-          console.log("re");
-          return reject();
-        } else {
-          var tab = tabs[0];
-          if (tab) {
-            cl(`Active tab is ${tab.url}`, Log.TABS);
-            return resolve(tab);
-          }
-        }
-      }
-    );
-  });
+  try {
+    const tabs = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+      // 'windowId': chrome.windows.WINDOW_ID_CURRENT
+    });
+    const tab = tabs[0];
+    if (tab) cl(`Active tab is ${tab.url}`, Log.TABS);
+    return tab;
+  } catch (err) {
+    console.log("re", err);
+    // FIX Chrome 91 bug or feature: https://stackoverflow.com/questions/67822816/tabs-cannot-be-queried-right-now-user-may-be-dragging-a-tab
+    return;
+  }
 };
 
 export const initTabs = async () => {};

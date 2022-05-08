@@ -1,6 +1,4 @@
-<template>
-  POPUP
-</template>
+<template>POPUP</template>
 
 <script>
 export default {
@@ -11,9 +9,8 @@ export default {
     };
   },
   unmounted() {
-      chrome.runtime.sendMessage({ popupOpen: false });
-
-  }
+    chrome.runtime.sendMessage({ popupOpen: false });
+  },
 };
 </script>
 

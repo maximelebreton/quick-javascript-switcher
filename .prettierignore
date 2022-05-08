@@ -1,0 +1,7 @@
+.git/
+dist/
+src/assets/
+
+package-lock.json
+pnpm-lock.yaml
+package.json

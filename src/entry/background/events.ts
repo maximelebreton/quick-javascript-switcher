@@ -73,7 +73,7 @@ export const initEvents = () => {
   chrome.runtime.onInstalled.addListener(async (details) => {
     await updateContextMenus();
     const tab = await getActiveTab();
-    await updateIcon(tab);
+    if (tab) await updateIcon(tab);
 
     // Check whether new version is installed
     if (details.reason == "install") {

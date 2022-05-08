@@ -1,17 +1,11 @@
 @import "../assets/bootstrap.css";
 
-
 html {
-
   width: 1024.5px;
   overflow-y: scroll !important;
-
 }
 
-
-
 body {
-
   // display: flex;
   // align-items: top;
   // justify-content: center;
@@ -32,7 +26,6 @@ body {
   min-width: 4em;
   height: calc(2.5rem - 2px);
   display: flex;
-
 }
 
 label {
@@ -101,8 +94,6 @@ label {
   border-top-color: transparent !important;
 }
 
-
-
 .switch-button {
   background: rgba(255, 255, 255, 0.56);
   border-radius: 30px;
@@ -111,7 +102,7 @@ label {
   text-align: center;
   font-size: 18px;
   letter-spacing: 1px;
-  color: #155FFF;
+  color: #155fff;
   position: relative;
   padding-right: 120px;
   position: relative;
@@ -141,12 +132,12 @@ label {
     opacity: 0;
     z-index: 2;
 
-    &:checked+.switch-button-label:before {
+    &:checked + .switch-button-label:before {
       transform: translateX(120px);
       transition: transform 300ms linear;
     }
 
-    &+.switch-button-label {
+    & + .switch-button-label {
       position: relative;
       padding: 15px 0;
       display: block;
@@ -172,4 +163,3 @@ label {
     }
   }
 }
-

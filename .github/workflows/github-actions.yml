@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
       - run: npm ci
       - run: npm run build --if-present
       # - run: npm run zip --if-present
@@ -20,18 +20,18 @@ jobs:
       - id: packExtensionDir
         uses: cardinalby/webext-buildtools-pack-extension-dir-action@v1
         with:
-          extensionDir: '.build/'
-          zipFilePath: 'quick-javascript-switcher.zip'
-  
+          extensionDir: ".build/"
+          zipFilePath: "quick-javascript-switcher.zip"
+
       - id: buildCrx
         uses: cardinalby/webext-buildtools-chrome-crx-action@v2
         with:
-          zipFilePath: 'quick-javascript-switcher.zip'
-          crxFilePath: 'quick-javascript-switcher.crx'
+          zipFilePath: "quick-javascript-switcher.zip"
+          crxFilePath: "quick-javascript-switcher.crx"
           privateKey: ${{ secrets.CHROME_CRX_PRIVATE_KEY }}
-          updateXmlPath: 'update.xml'
-          updateXmlCodebaseUrl: 'https://github.com/maximelebreton/quick-javascript-switcher/releases/download/latest/quick-javascript-switcher.crx'
-          
+          updateXmlPath: "update.xml"
+          updateXmlCodebaseUrl: "https://github.com/maximelebreton/quick-javascript-switcher/releases/download/latest/quick-javascript-switcher.crx"
+
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -40,7 +40,6 @@ jobs:
           files: |
             quick-javascript-switcher.zip
             quick-javascript-switcher.crx
-
 
       # - name: Chrome Extension upload & publish
       #   uses: Passiverecords/chrome-extension-upload-action@1.4.1
