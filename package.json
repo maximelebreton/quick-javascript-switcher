@@ -9,6 +9,7 @@
     "lint": "vue-cli-service lint",
     "build-watch": "vue-cli-service build-watch --mode development",
     "zip": "bestzip quick-javascript-switcher.zip .build/*",
+    "prettier": "prettier -w .",
     "deploy": "npm run build && npm run zip && npm run upload"
   },
   "dependencies": {

@@ -1,10 +1,25 @@
 <template>
   <div>
     <div class="form-check container py-3">
-      
-      <label for="useLocal"><input type="radio" id="useLocal" :value="false" v-model="modelOptionsUseSync"> Local</label>
-      
-      <label for="useSync"><input type="radio" id="useSync" :value="true" v-model="modelOptionsUseSync"> Sync</label>
+      <label for="useLocal"
+        ><input
+          type="radio"
+          id="useLocal"
+          :value="false"
+          v-model="modelOptionsUseSync"
+        />
+        Local</label
+      >
+
+      <label for="useSync"
+        ><input
+          type="radio"
+          id="useSync"
+          :value="true"
+          v-model="modelOptionsUseSync"
+        />
+        Sync</label
+      >
       <!-- <input
         class="form-check-input"
         type="checkbox"
@@ -289,54 +304,48 @@
 </template>
 
 <script lang="ts">
-import { getOptions, syncOptionsToStorage, getUseSyncState, initState } from "@/entry/options/state";
+import {
+  getOptions,
+  syncOptionsToStorage,
+  getUseSyncState,
+  initState,
+} from "@/entry/options/state";
 import { setUseSyncToStorage } from "@/entry/background/storage";
 import { rebaseJavascriptSettingsFromStorage } from "@/entry/background/contentsettings";
-import {  checkExistingRules } from "@/entry/options/methods";
+import { checkExistingRules } from "@/entry/options/methods";
 import { defineComponent, onMounted } from "vue";
-import {
-  useState,
-  useComputed,
-  useMethods,
-} from "../entry/options";
+import { useState, useComputed, useMethods } from "../entry/options";
 export default defineComponent({
   name: "App",
   components: {},
   watch: {
-      // whenever question changes, this function will run
+    // whenever question changes, this function will run
     getInputRule(rule, oldRule) {
-      console.log("input rule")
-      checkExistingRules(rule)
+      console.log("input rule");
+      checkExistingRules(rule);
     },
     userRules(rules, oldRules) {
-      const {getInputRule} = useComputed()
-      checkExistingRules(getInputRule.value)
+      const { getInputRule } = useComputed();
+      checkExistingRules(getInputRule.value);
     },
     async modelOptionsUseSync(value, oldValue) {
-        console.log("options watch", value)
-        setUseSyncToStorage(value)
+      console.log("options watch", value);
+      setUseSyncToStorage(value);
 
-        await rebaseJavascriptSettingsFromStorage();
-    }
- ,   
+      await rebaseJavascriptSettingsFromStorage();
+    },
   },
   setup() {
     const { fetchRules } = useMethods();
-    initState()
+    initState();
 
     onMounted(async () => {
-
       await fetchRules();
 
       chrome.storage.onChanged.addListener(async () => {
         await fetchRules();
       });
-
-
     });
-    
-    
-
 
     return {
       ...useState(),
