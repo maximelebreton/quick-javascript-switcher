@@ -16,7 +16,7 @@
   >
   > As a solo developer, your backing means the world to me and **helps sustain the project**.
   >
-  > **Please consider to support my work, with [making a donation](https://donate.stripe.com/14k03Dcbca0XaGY3cn)** 💖
+  > **Please consider to support my work by [making a donation](https://donate.stripe.com/14k03Dcbca0XaGY3cn)** *(with this button →)*
   
   </div>
   
