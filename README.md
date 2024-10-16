@@ -9,7 +9,18 @@
   
   He comes very popular for that (currently used by **+280 000 users!**), and had many many good reviews by users (**4.4 out of 5 based on 700+ rates**)
   
-  Since few months, Chrome has evolved, some users [asked for new features](https://github.com/maximelebreton/quick-javascript-switcher/issues), and I had many ideas for QJS.  
+  Since few months, Chrome has evolved, some users [asked for new features](https://github.com/maximelebreton/quick-javascript-switcher/issues), and I had many ideas for QJS.
+  So it was time to rewrite everything from scratch and release this 2.0 version.
+
+  > [!IMPORTANT]
+  > 
+  > QJS is an open source chrome extension coded by me, [Maxime](https://github.com/maximelebreton).
+  >
+  > As a solo developer, your backing means the world to me and **helps sustain the project**.
+  >
+  > Please consider to **support my work**, with [making a donation](https://donate.stripe.com/14k03Dcbca0XaGY3cn).
+  
+  
   **So here is the new 2.0 version.**
   
   Please consider to support my work:
