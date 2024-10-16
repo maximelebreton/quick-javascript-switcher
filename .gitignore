@@ -5,6 +5,7 @@ node_modules
 .builds
 .build.crx
 quick-javascript-switcher.pem
+quick-javascript-switcher*.zip
 
 # local env files
 .env.local

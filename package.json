@@ -8,7 +8,8 @@
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "build-watch": "vue-cli-service build-watch --mode development",
-    "zip": "bestzip quick-javascript-switcher.zip .build/*",
+    "zip": "cd .build && bestzip ../quick-javascript-switcher-%npm_package_version%.zip *",
+    "build-and-zip": "pnpm run build && pnpm run zip",
     "deploy": "pnpm run build && pnpm run zip && pnpm run upload"
   },
   "dependencies": {
@@ -37,7 +38,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^2.0.0-0",
-    "bestzip": "^2.2.0",
+    "bestzip": "^2.2.1",
     "chrome-types": "^0.1.16",
     "copy-webpack-plugin": "^4.6.0",
     "eslint": "^6.7.2",
