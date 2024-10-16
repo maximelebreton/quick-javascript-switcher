@@ -89,7 +89,9 @@ export const addJavascriptRule = async (rule: QJS.ContentSettingRule) => {
         `${rule.setting} ${rule.primaryPattern} rule added to content settings`
       );
 
+      //@ts-expect-error
       if (chrome.runtime.lastError) {
+        //@ts-expect-error
         console.error(chrome.runtime.lastError.message);
       } else {
         await setStorageRule(rule);
