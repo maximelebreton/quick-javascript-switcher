@@ -1,7 +1,7 @@
 ## L'histoire
 
 <div style="display: flex;">
-  <div>
+  <div markdown="1">
   [Quick JavaScript Switcher](https://chrome.google.com/webstore/detail/quick-javascript-switcher/geddoclleiomckbhadiaipdggiiccfje) (Chrome extension) has been designed just for one thing:  
   **Disable JavaScript on any site in one click.**
   
