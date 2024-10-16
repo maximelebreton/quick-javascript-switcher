@@ -97,7 +97,7 @@ const titles = {
   [ContextMenus.MORE]: "More...",
   [ContextMenus.CHROME_SETTINGS]: "Open Chrome settings",
   [ContextMenus.OPEN_POPUP]: "Open popup",
-  [ContextMenus.SUPPORT]: "☕ Buy me a hot drink",
+  [ContextMenus.SUPPORT]: "💖 Support my work (donate)",
   [ContextMenus.SHORTCUT]: "Shortcut",
   [ContextMenus.DANGER_ZONE]: "Danger zone",
   [ContextMenus.OPEN_LINK_WITH_JS_DISABLED]:

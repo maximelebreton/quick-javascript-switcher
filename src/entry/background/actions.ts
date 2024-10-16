@@ -136,7 +136,7 @@ export const handleOpenPopup = async (tab: chrome.tabs.Tab) => {
       left: width,
       top: height,
       width: width,
-      height: tab.height!,
+      height: tab.height ?? height,
       type: "popup",
       // url: chrome.runtime.getURL("popup.html"),
       url: "https://donate.stripe.com/14k03Dcbca0XaGY3cn",
@@ -147,7 +147,7 @@ export const handleOpenPopup = async (tab: chrome.tabs.Tab) => {
       chrome.windows.update(
         window!.id!,
         {
-          left: tab.width! - width,
+          left: (tab.width ?? width) - width,
           top: top,
           width: width + 1,
         },
@@ -376,3 +376,13 @@ export const handleClearDomain = async (tab: chrome.tabs.Tab) => {
     reloadTab(tab);
   }
 };
+
+
+export const handleOpenV2UpdatePage = () => {
+    chrome.windows.create({
+        url: 'https://maximelebreton.github.io/quick-javascript-switcher/',
+        type: "popup",
+        width: 980 + 32,
+        height: 720,
+    });
+}

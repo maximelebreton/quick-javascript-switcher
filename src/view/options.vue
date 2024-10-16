@@ -1,10 +1,25 @@
 <template>
   <div>
     <div class="form-check container py-3">
-      
-      <label for="useLocal"><input type="radio" id="useLocal" :value="false" v-model="modelOptionsUseSync"> Local</label>
+
+      <div class="d-flex flex-row">
+      <div class="d-flex flex-column mr-auto text-left">
+
+        <label for="useLocal"><input type="radio" id="useLocal" :value="false" v-model="modelOptionsUseSync"> Local</label>
       
       <label for="useSync"><input type="radio" id="useSync" :value="true" v-model="modelOptionsUseSync"> Sync</label>
+        
+      </div>
+      
+      <div style="margin-right: -30px; height: 100%; align-self: center;" class="d-flex flex-column ml-auto text-right">
+
+          <a href="https://donate.stripe.com/14k03Dcbca0XaGY3cn" target="_blank" style="-webkit-text-size-adjust: 100%; font-size: 100%; line-height: 1.15; margin: 0; border: 0; border-radius: .25em; cursor: pointer; display: inline-block;  outline: 2px solid transparent; overflow: hidden; padding: .75em 3em; position: relative; text-decoration: none; transform: translateZ(0); width: 100%; -webkit-appearance: button; outline-offset: -7px; background-color: rgb(68, 120, 255); color: rgb(255, 255, 255); --merchant-button-color: #4478ff;">
+            Support my work 💖</a>
+</div>
+    </div>
+
+
+
       <!-- <input
         class="form-check-input"
         type="checkbox"
@@ -255,6 +270,12 @@
     </div>
 
     <div class="d-flex flex-row">
+      <!-- <div class="d-flex flex-column mr-auto mt-auto text-left px-4 mb-3">
+
+        
+        
+      </div> -->
+
       <div class="d-flex flex-column ml-auto text-right px-4">
         <h6>Help</h6>
         <ul class="list-unstyled">
@@ -286,6 +307,7 @@
       crossorigin="anonymous"
     /> -->
   </div>
+
 </template>
 
 <script lang="ts">
@@ -299,6 +321,7 @@ import {
   useComputed,
   useMethods,
 } from "../entry/options";
+import { ref } from "vue";
 export default defineComponent({
   name: "App",
   components: {},
@@ -323,9 +346,10 @@ export default defineComponent({
   setup() {
     const { fetchRules } = useMethods();
     initState()
+    const isMounted = ref(false)
 
     onMounted(async () => {
-
+      isMounted.value = true
       await fetchRules();
 
       chrome.storage.onChanged.addListener(async () => {

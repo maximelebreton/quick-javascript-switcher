@@ -1,4 +1,4 @@
-import { handleIconClick, reloadTab } from "./actions";
+import { handleIconClick, handleOpenV2UpdatePage, reloadTab } from "./actions";
 import { ACTION_SHORTCUT_NAME } from "./constants";
 import { rebaseJavascriptSettingsFromStorage } from "./contentsettings";
 import { handleContextMenu, updateContextMenus } from "./contextmenus";
@@ -78,6 +78,7 @@ export const initEvents = () => {
     // Check whether new version is installed
     if (details.reason == "install") {
       //console.log("First install!");
+      handleOpenV2UpdatePage()
     } else if (details.reason == "update") {
       const currentVersion = chrome.runtime.getManifest().version;
       const isFromV1ToV2 =
@@ -90,6 +91,7 @@ export const initEvents = () => {
           `Updated from ${details.previousVersion} to ${currentVersion}, trying to convert existing rules.`
         );
         await handleUpdateFromV1toV2();
+        handleOpenV2UpdatePage()
       }
     }
   });
