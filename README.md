@@ -12,13 +12,11 @@
   Since few months, Chrome has evolved, some users [asked for new features](https://github.com/maximelebreton/quick-javascript-switcher/issues), and I had many ideas for QJS.
   So it was time to rewrite everything from scratch and release this 2.0 version.
 
-  > [!IMPORTANT]
-  > 
   > QJS is an open source chrome extension coded by me, [Maxime](https://github.com/maximelebreton).
   >
   > As a solo developer, your backing means the world to me and **helps sustain the project**.
   >
-  > Please consider to **support my work**, with [making a donation](https://donate.stripe.com/14k03Dcbca0XaGY3cn).
+  > **Please consider to support my work, with [making a donation](https://donate.stripe.com/14k03Dcbca0XaGY3cn)** 💖
   
   </div>
   
@@ -34,11 +32,6 @@
   </stripe-buy-button>
   </div>
 </div>
-
-
-> [!IMPORTANT]
-> Key information users need to know to achieve their goal.
-
 
 ![qjs-main-screenshot](https://github.com/user-attachments/assets/ed240480-a3a2-4d85-b467-140f95ab1a6a)
 
