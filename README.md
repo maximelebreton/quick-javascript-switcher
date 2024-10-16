@@ -1,7 +1,7 @@
 ## Welcome to the new Quick Javascript Switcher: v2.0
 
-<div style="display: flex; flex-wrap: wrap;">
-  <div markdown="1">
+<div style="display: flex; flex-wrap: wrap; flex-direction: row;">
+  <div style="flex-shrink: 1; flex-grow: 1; width: 50%;" markdown="1">
     
     
   [Quick JavaScript Switcher](https://chrome.google.com/webstore/detail/quick-javascript-switcher/geddoclleiomckbhadiaipdggiiccfje) (Chrome extension) has been designed just for one thing:  
