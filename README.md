@@ -1,4 +1,4 @@
-## Welcome to the new Quick Javascript Switcher: v2.0
+## Welcome to the new version: QJS 2.0
 
 <div style="display: flex; flex-wrap: wrap; flex-direction: row;">
   <div style="flex-shrink: 1; flex-grow: 1; width: 50%;" markdown="1">
