@@ -12,11 +12,11 @@
   Since few months, Chrome has evolved, some users [asked for new features](https://github.com/maximelebreton/quick-javascript-switcher/issues), and I had many ideas for QJS.
   So it was time to rewrite everything from scratch and release this 2.0 version.
 
-  > QJS is an open source chrome extension coded by me, [Maxime](https://github.com/maximelebreton).
+  > **QJS is an open source chrome extension coded by me, [Maxime](https://github.com/maximelebreton).**
   >
-  > As a solo developer, your backing means the world to me and **helps sustain the project**.
+  > **As a solo developer, your backing means the world to me and helps sustain the project**.
   >
-  > **Please consider to support my work by [making a donation](https://donate.stripe.com/14k03Dcbca0XaGY3cn)** *(with this button →)*
+  > **Please consider to [support my work](https://donate.stripe.com/14k03Dcbca0XaGY3cn) by making a donation** 💖
   
   </div>
   
