@@ -305,7 +305,7 @@ export default defineComponent({
   watch: {
       // whenever question changes, this function will run
     getInputRule(rule, oldRule) {
-      console.log("input rule")
+      // console.log("input rule")
       checkExistingRules(rule)
     },
     userRules(rules, oldRules) {

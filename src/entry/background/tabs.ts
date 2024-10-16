@@ -24,8 +24,9 @@ export const handleGetActiveTab = async () => {
       },
       async (tabs) => {
         // FIX Chrome 91 bug or feature: https://stackoverflow.com/questions/67822816/tabs-cannot-be-queried-right-now-user-may-be-dragging-a-tab
+        //@ts-expect-error
         if (chrome.runtime.lastError) {
-          console.log("re");
+          // console.log("re");
           return reject();
         } else {
           var tab = tabs[0];

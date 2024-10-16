@@ -17,7 +17,7 @@ export const fetchRules = async () => {
 };
 
 export const showHelp = (name: string) => {
-  console.log("HE");
+  // console.log("HE");
   state.isHelpDisplayed = true;
   state.helpMessage = state.helpMessages[name];
 };
@@ -60,10 +60,10 @@ export const actionRule = async () => {
 };
 
 function resolveAfter2Seconds() {
-  console.log("2 sec!");
+  // console.log("2 sec!");
   return new Promise<void>((resolve) => {
     setTimeout(() => {
-      console.log("ok go.");
+      // console.log("ok go.");
       resolve();
     }, 2000);
   });
@@ -107,7 +107,7 @@ export const updateRule = async (
   // state.rules.splice(getEditedRuleIndex.value, 1);
 
   const editedRule = getRuleByIndex(index);
-  console.log(editedRule, " EDITED RUE");
+  console.log(editedRule, " EDITED RULE");
   await removeJavascriptRule(editedRule);
   console.info(editedRule, "RULE REMOVED");
 

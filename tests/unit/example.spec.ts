@@ -1,5 +1,5 @@
-import { shallowMount } from "@vue/test-utils";
-import HelloWorld from "@/components/HelloWorld.vue";
+// import { shallowMount } from "@vue/test-utils";
+// import HelloWorld from "@/components/HelloWorld.vue";
 import { QJS, convertOldRulesToNew } from "@/entry/background/storage";
 import satisfies from "semver/functions/satisfies";
 

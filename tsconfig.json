@@ -13,8 +13,8 @@
     "baseUrl": ".",
     "types": [
       "chrome-types",
-      "webpack-env",
-      "jest"
+      // "webpack-env",
+      "jest",
     ],
     "paths": {
       "@/*": [

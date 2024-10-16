@@ -50,9 +50,7 @@ export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
 
   if (await isPausedTab(tab)) {
     await handlePlay(tab);
-    console.log("OUAOUOAHA11");
   } else {
-    console.log("OUAOUOAHA");
     const { subdomain, scheme } = await getUrlAsObject(tab.url!);
     const setting = await getTabSetting(tab);
     cl(`setting for ${tab.url} : ${setting}`, Log.ACTIONS);
@@ -129,7 +127,7 @@ export const handleOpenShortcut = () => {
 export const handleOpenPopup = async (tab: chrome.tabs.Tab) => {
   // chrome.action.setPopup({ popup: "popup.html", tabId: tab.id });
   // console.log("ok");
-  const width = 320;
+  const width = 420;
   const height = 532;
   const top = 67;
   const state = getState.value;
@@ -141,7 +139,7 @@ export const handleOpenPopup = async (tab: chrome.tabs.Tab) => {
       height: tab.height!,
       type: "popup",
       // url: chrome.runtime.getURL("popup.html"),
-      url: "https://buy.stripe.com/cN22bLgrs0qn7uM289",
+      url: "https://donate.stripe.com/14k03Dcbca0XaGY3cn",
       focused: true,
     },
     (window) => {

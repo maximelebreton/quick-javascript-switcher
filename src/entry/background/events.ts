@@ -26,7 +26,7 @@ export const initEvents = () => {
 
     cl("ON TAB ACTIVATED", Log.EVENTS);
     await updateContextMenus();
-    console.log("UPDATE CONTEXT MENUS FINISHED");
+    // console.log("UPDATE CONTEXT MENUS FINISHED");
     chrome.tabs.get(tabId, async (tab) => {
       await updateIcon(tab);
     });
@@ -37,7 +37,7 @@ export const initEvents = () => {
     cl("ON TAB UPDATED", Log.EVENTS);
     // Prevent multiple calls
     if (props.status === "loading" && tab.selected) {
-      console.info("tab updated 2!");
+      // console.info("tab updated 2!");
       //console.info("onUpdated");
       await updateContextMenus();
       await updateIcon(tab);
