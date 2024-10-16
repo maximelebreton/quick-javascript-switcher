@@ -20,10 +20,6 @@
   >
   > Please consider to **support my work**, with [making a donation](https://donate.stripe.com/14k03Dcbca0XaGY3cn).
   
-  
-  **So here is the new 2.0 version.**
-  
-  Please consider to support my work:
   </div>
   
   <div>
@@ -39,6 +35,9 @@
   </div>
 </div>
 
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
 
 
 ![qjs-main-screenshot](https://github.com/user-attachments/assets/ed240480-a3a2-4d85-b467-140f95ab1a6a)
