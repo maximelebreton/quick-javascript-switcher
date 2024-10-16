@@ -1,24 +1,30 @@
 ## L'histoire
 
-[Quick JavaScript Switcher](https://chrome.google.com/webstore/detail/quick-javascript-switcher/geddoclleiomckbhadiaipdggiiccfje) (Chrome extension) has been designed just for one thing:  
-**Disable JavaScript on any site in one click.**
-
-He comes very popular for that (currently used by **280 000 users!**), and had many many good reviews by users (**4.4 out of 5 based on 700+ rates**)
-
-Since few months, Chrome has evolved, some users [asked for new features](https://github.com/maximelebreton/quick-javascript-switcher/issues), and I had many ideas for QJS.  
-**So here is the new 2.0 version.**
-
-Please consider to support my work:
-
-<script async
-  src="https://js.stripe.com/v3/buy-button.js">
-</script>
-
-<stripe-buy-button
-  buy-button-id="buy_btn_1QAcSzIh8pk66UUulaNJ48EM"
-  publishable-key="pk_live_LqLtM2EWjuxtsohHujofdnvI"
->
-</stripe-buy-button>
+<div style="display: flex;">
+  <div>
+  [Quick JavaScript Switcher](https://chrome.google.com/webstore/detail/quick-javascript-switcher/geddoclleiomckbhadiaipdggiiccfje) (Chrome extension) has been designed just for one thing:  
+  **Disable JavaScript on any site in one click.**
+  
+  He comes very popular for that (currently used by **280 000 users!**), and had many many good reviews by users (**4.4 out of 5 based on 700+ rates**)
+  
+  Since few months, Chrome has evolved, some users [asked for new features](https://github.com/maximelebreton/quick-javascript-switcher/issues), and I had many ideas for QJS.  
+  **So here is the new 2.0 version.**
+  
+  Please consider to support my work:
+  </div>
+  
+  <div>
+  <script async
+    src="https://js.stripe.com/v3/buy-button.js">
+  </script>
+  
+  <stripe-buy-button
+    buy-button-id="buy_btn_1QAcSzIh8pk66UUulaNJ48EM"
+    publishable-key="pk_live_LqLtM2EWjuxtsohHujofdnvI"
+  >
+  </stripe-buy-button>
+  </div>
+</div>
 
 
 
