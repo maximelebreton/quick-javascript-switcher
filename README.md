@@ -1,7 +1,7 @@
-## L'histoire
-
 <div style="display: flex;">
   <div markdown="1">
+  ## Here is the new version of QJS: Quick Javascript Switcher 2.0
+    
   [Quick JavaScript Switcher](https://chrome.google.com/webstore/detail/quick-javascript-switcher/geddoclleiomckbhadiaipdggiiccfje) (Chrome extension) has been designed just for one thing:  
   **Disable JavaScript on any site in one click.**
   
