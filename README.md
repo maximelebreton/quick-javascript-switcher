@@ -47,10 +47,7 @@ Now it's possible with Pause JS feature!
 
 
 
-
-
-![qjs-screenshot-3](https://github.com/user-attachments/assets/eedcd24f-a072-41f2-9bfe-36bcdf8b4115)
-
+## New panel editor for custom rules
 Based on **VueJS**, the next options interface will be more user friendly to manage your rules (search, add, edit, remove).  
 
 Custom rules allow you to fine-tune your allow/block rules on every part of the url (scheme, subdomain, domain, port, path... etc...!)  
@@ -59,9 +56,13 @@ You can **enter these two rules through the new options interface** (or from the
 **Block** `*.google.com/*`  
 **Allow** `mail.google.com/*`
 
-These rules follow [pattern precedence](https://developer.chrome.com/extensions/contentSettings#pattern-precedence), the **rule with the more specific pattern takes precedence.** 
+These rules follow [pattern precedence](https://developer.chrome.com/extensions/contentSettings#pattern-precedence), the rule with the more specific pattern takes precedence.
 
 **And you can sync these rules over your Chrome account settings.**
+
+
+![qjs-screenshot-3](https://github.com/user-attachments/assets/eedcd24f-a072-41f2-9bfe-36bcdf8b4115)
+
 
 
 
