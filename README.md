@@ -1,4 +1,4 @@
-<div style="display: flex;">
+<div style="display: flex; flex-wrap: wrap;">
   <div markdown="1">
   ## Here is the new version of QJS: Quick Javascript Switcher 2.0
     
