@@ -1,12 +1,13 @@
+## Welcome to the new Quick Javascript Switcher: v2.0
+
 <div style="display: flex; flex-wrap: wrap;">
   <div markdown="1">
     
-  ## Here is the new version of QJS: Quick Javascript Switcher 2.0
     
   [Quick JavaScript Switcher](https://chrome.google.com/webstore/detail/quick-javascript-switcher/geddoclleiomckbhadiaipdggiiccfje) (Chrome extension) has been designed just for one thing:  
   **Disable JavaScript on any site in one click.**
   
-  He comes very popular for that (currently used by **280 000 users!**), and had many many good reviews by users (**4.4 out of 5 based on 700+ rates**)
+  He comes very popular for that (currently used by **+280 000 users!**), and had many many good reviews by users (**4.4 out of 5 based on 700+ rates**)
   
   Since few months, Chrome has evolved, some users [asked for new features](https://github.com/maximelebreton/quick-javascript-switcher/issues), and I had many ideas for QJS.  
   **So here is the new 2.0 version.**
