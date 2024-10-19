@@ -7,14 +7,14 @@
   [Quick JavaScript Switcher](https://chrome.google.com/webstore/detail/quick-javascript-switcher/geddoclleiomckbhadiaipdggiiccfje) (Chrome extension) has been designed just for one thing:  
   **Disable JavaScript on any site in one click.**
   
-  He comes very popular for that (currently used by **+280 000 users!**), and had many many good reviews by users (**4.4 out of 5 based on 700+ rates**)
+  It comes very popular for that (currently used by **+280 000 users!**), and had many many good reviews by users (**4.4 out of 5 based on 700+ rates**)
   
   Since few months, Chrome has evolved, some users [asked for new features](https://github.com/maximelebreton/quick-javascript-switcher/issues), and I had many ideas for QJS.
   So it was time to rewrite everything from scratch and release this 2.0 version.
 
-  > **QJS is an open source chrome extension coded by me, [Maxime](https://github.com/maximelebreton)** <img style="vertical-align: middle;height: 3em;margin-bottom: -1em;margin-top: -1em;" src="https://avatars.githubusercontent.com/u/1072425?s=200&amp;v=4" />
+  > **QJS is an Open Source Chrome extension coded by me, [Maxime](https://github.com/maximelebreton)** <img style="vertical-align: middle;height: 3em;margin-bottom: -1em;margin-top: -1em;" src="https://avatars.githubusercontent.com/u/1072425?s=200&amp;v=4" />
   >
-  > **As a solo developer, your backing means the world to me and helps sustain the project**.
+  > **As a solo developer, your backing means a lot and helps sustain the project**.
   >
   > **Please consider to support my work by [making a donation](https://donate.stripe.com/14k03Dcbca0XaGY3cn)** 💖
   
