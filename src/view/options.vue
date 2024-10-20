@@ -346,10 +346,8 @@ export default defineComponent({
   setup() {
     const { fetchRules } = useMethods();
     initState()
-    const isMounted = ref(false)
 
     onMounted(async () => {
-      isMounted.value = true
       await fetchRules();
 
       chrome.storage.onChanged.addListener(async () => {

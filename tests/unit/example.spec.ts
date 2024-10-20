@@ -1,6 +1,7 @@
 // import { shallowMount } from "@vue/test-utils";
 // import HelloWorld from "@/components/HelloWorld.vue";
 import { QJS, convertOldRulesToNew } from "@/entry/background/storage";
+import { getUrlAsObject } from "@/entry/background/utils";
 import satisfies from "semver/functions/satisfies";
 
 describe("Storage", () => {
@@ -32,6 +33,41 @@ describe("Storage", () => {
       [rule2.primaryPattern]: rule2,
     });
   });
+
+  it('should extract the correct url object', () =>  {
+    expect(getUrlAsObject('https://github.com/*')).toEqual({
+      hostname: 'github.com',
+      scheme: 'https',
+      schemeSuffix: '://',
+      domain: 'github.com',
+      subdomain: '',
+      pathname: '/*',
+      path: '/*',
+      pathnameUntilLastSlash: '',
+    });
+
+    expect(getUrlAsObject('https://gist.github.com/*')).toEqual({
+      hostname: 'gist.github.com',
+      scheme: 'https',
+      schemeSuffix: '://',
+      domain: 'github.com',
+      subdomain: 'gist.',
+      pathname: '/*',
+      path: '/*',
+      pathnameUntilLastSlash: '',
+    });
+
+    expect(getUrlAsObject('https://*.github.com/*')).toEqual({
+      hostname: '*.github.com',
+      scheme: 'https',
+      schemeSuffix: '://',
+      domain: 'github.com',
+      subdomain: '*.',
+      pathname: '/*',
+      path: '/*',
+      pathnameUntilLastSlash: '',
+    });
+  })
 
   it("should update when comes from 1.4.4 to 2.0.0", () => {
     const isFromV1ToV2 =

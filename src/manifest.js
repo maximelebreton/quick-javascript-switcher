@@ -1,7 +1,7 @@
 module.exports = {
   manifest_version: 3,
   name: "Quick Javascript Switcher",
-  description: "The one-click JavaScript Switcher",
+  description: "Disable JavaScript on any site in one click",
   version: process.env.VUE_APP_VERSION.replace("-beta", ""),
   minimum_chrome_version: "88.0",
   homepage_url: "https://github.com/maximelebreton/quick-javascript-switcher",

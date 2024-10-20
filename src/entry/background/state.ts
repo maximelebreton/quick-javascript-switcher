@@ -46,7 +46,7 @@ export const isPausedTab = async (tab: chrome.tabs.Tab) => {
     (stateTab) => stateTab && stateTab.id === tab.id && stateTab.paused === true
   );
 
-  cl(isPaused, undefined, "is paused?");
+  //cl(isPaused, undefined, "is paused?");
   return isPaused;
 };
 export const isPausedTabs = async () => {

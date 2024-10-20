@@ -1,7 +1,6 @@
 import {
-  getDomainSetting,
-  getJavascriptRuleSetting,
-  getSubdomainSetting,
+
+  clearJavascriptRule,
   getTabSetting,
   removeJavascriptRule,
   setJavascriptRule,
@@ -353,27 +352,33 @@ export const handleAllowUrl = async (tab: chrome.tabs.Tab) => {
 
 export const handleClearSubdomain = async (tab: chrome.tabs.Tab) => {
   cl("CLEAR SUBDOMAIN", Log.ACTIONS);
-  const primaryPattern = getSubdomainPatternFromUrl(tab.url!);
-  if (primaryPattern) {
-    await removeJavascriptRule({
-      primaryPattern,
-      scope: getScopeSetting(tab.incognito),
-    });
-    await updateContextMenus(); //not needed because we update tab
-    reloadTab(tab);
+  if (tab.url) {
+    
+    const primaryPattern = getSubdomainPatternFromUrl(tab.url);
+    if (primaryPattern) {
+      await clearJavascriptRule({
+        primaryPattern,
+        scope: getScopeSetting(tab.incognito),
+        tab
+      });
+      // await updateContextMenus(); //not needed because we update tab
+      reloadTab(tab);
+    }
   }
 };
 export const handleClearDomain = async (tab: chrome.tabs.Tab) => {
   cl("CLEAR DOMAIN", Log.ACTIONS);
-
-  const primaryPattern = getDomainPatternFromUrl(tab.url!);
-  if (primaryPattern) {
-    await removeJavascriptRule({
-      primaryPattern,
-      scope: getScopeSetting(tab.incognito),
-    });
-    await updateIcon(tab); //not needed because we update tab
-    reloadTab(tab);
+  if (tab.url) {
+    const primaryPattern = getDomainPatternFromUrl(tab.url);
+    if (primaryPattern) {
+      await clearJavascriptRule({
+        primaryPattern,
+        scope: getScopeSetting(tab.incognito),
+        tab
+      });
+      // await updateIcon(tab); //not needed because we update tab
+      reloadTab(tab);
+    }
   }
 };
 

@@ -16,8 +16,8 @@ export const cl = (message: any, type?: Log, name?: string) => {
     [Log.ACTIONS]: true,
     [Log.TABS]: false,
     [Log.RULES]: true,
-    [Log.STORAGE]: false,
-    [Log.EVENTS]: false,
+    [Log.STORAGE]: true,
+    [Log.EVENTS]: true,
     [Log.ICON]: false,
     [Log.CONTEXT_MENUS]: false,
   };
@@ -113,23 +113,42 @@ export const getScopeSetting = (incognito: chrome.tabs.Tab["incognito"]) => {
   return incognito ? "incognito_session_only" : "regular";
 };
 export const getUrlAsObject = (url: string) => {
-  const { domain, subdomain } = parse(url);
-  const { pathname, protocol, hostname } = new URL(url);
+  // Utiliser une regex pour capturer les différentes parties de l'URL manuellement
+  const urlRegex = /^(.*?):\/\/([^\/]*)(\/?.*)$/;
+  const matches = url.match(urlRegex);
 
-  /** http://, https:// etc... */
-  const scheme = protocol.replace(/\:$/, "");
+  let scheme = "";
+  let hostname = "";
+  let pathname = "";
+
+  if (matches) {
+    scheme = matches[1]; // Récupérer le scheme (ex: http, https, *)
+    hostname = matches[2]; // Récupérer le hostname (domaine + sous-domaine)
+    pathname = matches[3]; // Récupérer le chemin (path)
+  }
 
   const schemeSuffix = scheme === "file" ? ":///" : "://";
-
   const pathnameUntilLastSlash = pathname.substr(0, pathname.lastIndexOf("/"));
 
-  const fixedSubdomain = subdomain && subdomain.length ? `${subdomain}.` : "";
+  // Diviser le hostname en sous-domaine et domaine
+  const domainParts = hostname.split(".");
+  let domain = "";
+  let subdomain = "";
+
+  if (domainParts.length > 2) {
+    domain = domainParts.slice(-2).join(".");
+    subdomain = domainParts.slice(0, -2).join(".");
+  } else {
+    domain = hostname;
+    subdomain = "";
+  }
+
+  const fixedSubdomain = subdomain.length ? `${subdomain}.` : "";
 
   return {
     hostname,
     scheme,
     schemeSuffix,
-    protocol,
     domain,
     subdomain: fixedSubdomain,
     pathname,
@@ -137,6 +156,31 @@ export const getUrlAsObject = (url: string) => {
     pathnameUntilLastSlash,
   };
 };
+// export const getUrlAsObject = (url: string) => {
+//   const { domain, subdomain } = parse(url);
+//   const { pathname, protocol, hostname } = new URL(url);
+
+//   /** http://, https:// etc... */
+//   const scheme = protocol.replace(/\:$/, "");
+
+//   const schemeSuffix = scheme === "file" ? ":///" : "://";
+
+//   const pathnameUntilLastSlash = pathname.substr(0, pathname.lastIndexOf("/"));
+
+//   const fixedSubdomain = subdomain && subdomain.length ? `${subdomain}.` : "";
+
+//   return {
+//     hostname,
+//     scheme,
+//     schemeSuffix,
+//     //protocol,
+//     domain,
+//     subdomain: fixedSubdomain,
+//     pathname,
+//     path: pathname,
+//     pathnameUntilLastSlash,
+//   };
+// };
 
 export const isValidScheme = (scheme: string) => {
   return ["*", "http", "https", "file", "ftp", "urn"].includes(scheme)
@@ -201,3 +245,43 @@ export const retry = <T>(fn: () => Promise<T>, ms: number): Promise<T> =>
         }, ms);
       });
   });
+
+  export function sortUrlsByPatternPrecedence(urls: string[]) {
+    // Fonction pour déterminer la priorité des motifs
+    function getPatternScore(url: string) {
+        let score = 0;
+
+        // Priorité par schéma (https > http)
+        if (url.startsWith("https://")) score += 3;
+        else if (url.startsWith("http://")) score += 2;
+
+        // Priorité par la spécificité du domaine
+        const domainParts = url.split("/")[2].split(".");
+        if (domainParts.length > 2) {
+            // Plus le sous-domaine est spécifique, plus le score est élevé
+            score += 1 * (domainParts.length - 2);
+        }
+
+        // Priorité par longueur du chemin (plus c'est long, plus c'est spécifique)
+        const pathLength = url.split("/").length - 3;
+        score += pathLength;
+
+        return score;
+    }
+
+    // Trier les URLs selon la priorité (score décroissant)
+    return urls.sort((a, b) => getPatternScore(b) - getPatternScore(a));
+}
+
+
+export function getDomainAndSubdomain(url: string) {
+  try {
+      const parsedUrl = new URL(url);
+      const hostname = parsedUrl.hostname;
+      
+      return hostname;
+  } catch (error) {
+      console.error('Invalid url:', error);
+      return null;
+  }
+}

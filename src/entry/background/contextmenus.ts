@@ -467,7 +467,7 @@ export const updateContextMenus = async () => {
 export const getDefaultShortcut = async () => {
   return new Promise((resolve, reject) => {
     chrome.commands.getAll((commands) => {
-      console.log(commands, "commands");
+      //console.info(commands, "commands");
       const shortcut =
         commands.find(
           // (command) => command.name === "_execute_bowser_action"

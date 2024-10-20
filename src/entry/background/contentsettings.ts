@@ -3,6 +3,7 @@ import { clearJavascriptRules, handleClear, reloadTab } from "./actions";
 import { cl, isAllowedPattern, Log } from "./utils";
 import { updateIcon } from "./icon";
 import {
+  getDomainStorageRulesFromUrl,
   getStorageRules,
   QJS,
   setStorageRule,
@@ -34,12 +35,33 @@ export const getJavascriptRuleSetting = async ({
         incognito,
       },
       (details) => {
-        cl(details, Log.RULES);
+        cl('Current content setting:' + JSON.stringify(details), Log.RULES, 'CONTENT SETTINGS RULE: '+primaryUrl);
         resolve(details.setting);
       }
     );
   });
 };
+
+export const removeConflictedRulesFromPattern = async (tabPattern: string) => {
+  const { scheme: tabScheme, subdomain: tabSubdomain, domain: tabDomain } = getUrlAsObject(tabPattern);
+
+  const existingDomainRules = await getDomainStorageRulesFromUrl(tabPattern)
+  
+  Object.entries(existingDomainRules).forEach(async ([storagePattern, rule]) => {
+    const { scheme: storageScheme, subdomain: storageSubdomain, domain: storageDomain } = getUrlAsObject(storagePattern);
+    cl({urlScheme: tabScheme, patternScheme: storageScheme, urlSubdomain: tabSubdomain, patternSubdomain: storageSubdomain, urlDomain: tabDomain, patternDomain: storageDomain}, Log.RULES, "Potential conflicted rules with: "+tabPattern)
+    if (tabScheme !== storageScheme && tabSubdomain === storageSubdomain && tabDomain === storageDomain) {
+      await removeJavascriptRule(rule)
+      cl(`Conflicted rule removed: ${storagePattern} (conflict with url: ${tabPattern})`, Log.RULES)
+    } 
+    if ((tabSubdomain === '*.' && storageSubdomain === '') && tabDomain === storageDomain) {
+      console.warn(`Potential conflicted rule: ${storagePattern} (conflict with url: ${tabPattern})`)
+    }
+  })
+
+  //subdomain: `${scheme}${schemeSuffix}${subdomain}${domain}/*`,
+}
+
 
 export const removePrimaryPatternFromRules = (primaryPattern: string) => {};
 
@@ -71,6 +93,8 @@ export const setJavascriptRule = ({
     // } else {
     //   await addJavascriptRule(rule);
     // }
+    await removeConflictedRulesFromPattern(rule.primaryPattern)
+
     await addJavascriptRule(rule);
     if (tab) {
       await updateIcon(tab); //not needed because we update tab
@@ -80,10 +104,42 @@ export const setJavascriptRule = ({
   });
 };
 
+export const clearJavascriptRule = ({
+  primaryPattern,
+  scope,
+  tab,
+}: {
+  primaryPattern: QJS.ContentSettingRule["primaryPattern"];
+  scope: QJS.ContentSettingRule["scope"];
+  tab?: chrome.tabs.Tab;
+}) => {
+
+  return new Promise<void>(async (resolve, reject) => {
+    const rule = {
+      primaryPattern,
+      scope,
+    };
+
+    if (!isAllowedPattern(primaryPattern)) {
+      return;
+    }
+
+   // await removeConflictedRulesFromPattern(rule.primaryPattern)
+
+    await removeJavascriptRule(rule);
+    if (tab) {
+      await updateIcon(tab); //not needed because we update tab
+      reloadTab(tab);
+    }
+    resolve();
+  });
+}
+
 export const addJavascriptRule = async (rule: QJS.ContentSettingRule) => {
   cl(rule, Log.RULES);
-  return new Promise<void>((resolve, reject) => {
+  return new Promise<void>(async (resolve, reject) => {
     console.log(chrome.contentSettings, "chrome.contentSettings");
+
     chrome.contentSettings.javascript.set(rule, async () => {
       console.info(
         `${rule.setting} ${rule.primaryPattern} rule added to content settings`
@@ -114,9 +170,10 @@ export const rebaseJavascriptSettingsFromStorage = async () => {
 };
 
 export const removeJavascriptRule = async (
-  rule: Omit<QJS.ContentSettingRule, "setting">
+  rule: Pick<QJS.ContentSettingRule, "primaryPattern" | "scope">
 ) => {
   return new Promise<void>(async (resolve, reject) => {
+
     const storageRules = await getStorageRules();
     if (
       storageRules &&
