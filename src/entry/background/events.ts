@@ -49,6 +49,15 @@ export const initEvents = () => {
     cl("ON WINDOW FOCUS CHANGED", Log.EVENTS);
     await updateContextMenus();
 
+
+    chrome.tabs.query({active: true, windowId: windowId}, async (tabs) => {
+      if (tabs.length > 0) {
+        let tab = tabs[0];
+        await updateIcon(tab);
+      }
+    });
+    
+
     // if (state && state.popup) {
     // CLOSE POPUP
     // chrome.windows.get(state.popup.id, (window) => {

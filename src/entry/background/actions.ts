@@ -2,6 +2,7 @@ import {
 
   clearJavascriptRule,
   getTabSetting,
+  removeConflictedRulesFromPattern,
   removeJavascriptRule,
   setJavascriptRule,
 } from "./contentsettings";
@@ -53,35 +54,46 @@ export const toggleJavaScript = async (tab: chrome.tabs.Tab) => {
     const { subdomain, scheme } = await getUrlAsObject(tab.url!);
     const setting = await getTabSetting(tab);
     cl(`setting for ${tab.url} : ${setting}`, Log.ACTIONS);
-    if (setting === "allow") {
-      if (scheme === "file") {
-        await handleBlockUrl(tab);
-      } else {
-        if (subdomain.length) {
-          await handleBlockSubdomain(tab);
-        } else {
-          await handleBlockDomain(tab);
-        }
-      }
+
+    if (scheme === "file") {
+      await handleToggleUrl(tab);
     } else {
-      if (scheme === "file") {
-        await handleAllowUrl(tab);
+      if (subdomain.length) {
+        await handleToggleSubdomain(tab);
       } else {
-        if (subdomain.length) {
-          if (tab.incognito === true) {
-            await handleAllowSubdomain(tab);
-          } else {
-            await handleClearSubdomain(tab);
-          }
-        } else {
-          if (tab.incognito === true) {
-            await handleAllowDomain(tab);
-          } else {
-            await handleClearDomain(tab);
-          }
-        }
+        await handleToggleDomain(tab);
       }
     }
+
+    // if (setting === "allow") {
+    //   if (scheme === "file") {
+    //     await handleBlockUrl(tab);
+    //   } else {
+    //     if (subdomain.length) {
+    //       await handleBlockSubdomain(tab);
+    //     } else {
+    //       await handleBlockDomain(tab);
+    //     }
+    //   }
+    // } else {
+    //   if (scheme === "file") {
+    //     await handleAllowUrl(tab);
+    //   } else {
+    //     if (subdomain.length) {
+    //       if (tab.incognito === true) {
+    //         await handleAllowSubdomain(tab);
+    //       } else {
+    //         await handleClearSubdomain(tab);
+    //       }
+    //     } else {
+    //       if (tab.incognito === true) {
+    //         await handleAllowDomain(tab);
+    //       } else {
+    //         await handleClearDomain(tab);
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   // if (blockedSubdomainAndDomain) {
@@ -261,6 +273,55 @@ export const handlePause = async (tab: chrome.tabs.Tab) => {
     });
   });
 };
+
+export const hanleToggleByPattern = async (tab: chrome.tabs.Tab, primaryPattern: string) => {
+
+  if (tab.url) {
+    const oldSetting = await getTabSetting(tab)
+    const newSetting = oldSetting === 'allow' ? 'block' : 'allow'
+
+    if (!primaryPattern) {
+      return
+    }
+    await removeConflictedRulesFromPattern(primaryPattern)
+
+    console.info(`toggle from ${oldSetting} to ${newSetting}: ` + primaryPattern);
+    await setJavascriptRule({
+      primaryPattern,
+      scope: getScopeSetting(tab.incognito),
+      setting: newSetting,
+      tab,
+    });
+    
+
+  }
+
+}
+
+export const handleToggleSubdomain = async (tab: chrome.tabs.Tab) => {
+  if (tab.url) {
+    const primaryPattern = getSubdomainPatternFromUrl(tab.url);
+    if (primaryPattern) {
+      await hanleToggleByPattern(tab, primaryPattern)
+    }
+  }
+}
+
+export const handleToggleDomain = async (tab: chrome.tabs.Tab) => {
+    if (tab.url) {
+      const primaryPattern = getDomainPatternFromUrl(tab.url);
+      if (primaryPattern) {
+        await hanleToggleByPattern(tab, primaryPattern)
+      }
+    }
+};    
+
+export const handleToggleUrl = async (tab: chrome.tabs.Tab) => {
+  if (tab.url) {
+    const primaryPattern = getUrlPatternFromUrl(tab.url);
+    await hanleToggleByPattern(tab, primaryPattern)
+  }
+}; 
 
 export const handleBlockSubdomain = async (tab: chrome.tabs.Tab) => {
   if (tab.url) {

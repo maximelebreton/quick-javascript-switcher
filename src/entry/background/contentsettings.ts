@@ -1,6 +1,6 @@
 import { isValidPrimaryPattern } from "../options/computed";
 import { clearJavascriptRules, handleClear, reloadTab } from "./actions";
-import { cl, isAllowedPattern, Log } from "./utils";
+import { cl, isAllowedPattern, Log, sortUrlsByPatternPrecedence } from "./utils";
 import { updateIcon } from "./icon";
 import {
   getDomainStorageRulesFromUrl,
@@ -10,6 +10,7 @@ import {
   unsetStorageRule,
 } from "./storage";
 import { getUrlAsObject, isValidScheme } from "./utils";
+import { set } from "lodash";
 
 export type RuleSetting = "allow" | "block";
 
@@ -42,10 +43,14 @@ export const getJavascriptRuleSetting = async ({
   });
 };
 
+
+
 export const removeConflictedRulesFromPattern = async (tabPattern: string) => {
   const { scheme: tabScheme, subdomain: tabSubdomain, domain: tabDomain } = getUrlAsObject(tabPattern);
 
   const existingDomainRules = await getDomainStorageRulesFromUrl(tabPattern)
+  //const existingDomainPatterns = Object.values(existingDomainRules).map(({primaryPattern}) => primaryPattern)
+ // const sortedPatternsByPrecedence = sortUrlsByPatternPrecedence(existingDomainPatterns)
   
   Object.entries(existingDomainRules).forEach(async ([storagePattern, rule]) => {
     const { scheme: storageScheme, subdomain: storageSubdomain, domain: storageDomain } = getUrlAsObject(storagePattern);
@@ -55,7 +60,8 @@ export const removeConflictedRulesFromPattern = async (tabPattern: string) => {
       cl(`Conflicted rule removed: ${storagePattern} (conflict with url: ${tabPattern})`, Log.RULES)
     } 
     if ((tabSubdomain === '*.' && storageSubdomain === '') && tabDomain === storageDomain) {
-      console.warn(`Potential conflicted rule: ${storagePattern} (conflict with url: ${tabPattern})`)
+      await removeJavascriptRule(rule)
+      console.warn(`Conflicted rule removed: ${storagePattern} (conflict with url: ${tabPattern})`)
     }
   })
 
@@ -93,7 +99,7 @@ export const setJavascriptRule = ({
     // } else {
     //   await addJavascriptRule(rule);
     // }
-    await removeConflictedRulesFromPattern(rule.primaryPattern)
+    //await removeConflictedRulesFromPattern(rule.primaryPattern)
 
     await addJavascriptRule(rule);
     if (tab) {
@@ -123,8 +129,6 @@ export const clearJavascriptRule = ({
     if (!isAllowedPattern(primaryPattern)) {
       return;
     }
-
-   // await removeConflictedRulesFromPattern(rule.primaryPattern)
 
     await removeJavascriptRule(rule);
     if (tab) {
